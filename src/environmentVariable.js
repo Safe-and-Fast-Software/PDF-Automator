@@ -21,7 +21,7 @@ export class EnvironmentVariableNotSetError extends Error {
  * 
  * @returns the environment variable with the provided name
  */
-export function getEnvironmentVariable(name, defaultValue=undefined) {
+export default function getEnvironmentVariable(name, defaultValue=undefined) {
 
     const value = process.env[name];
     const environmentVariableIsNotSet = ( value === null || value === undefined || value === "" );
