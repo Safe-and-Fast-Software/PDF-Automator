@@ -55,7 +55,8 @@ app.get(constants.app.loginPath, (request, responds) => {
     const query = (
         "response_type=code&" +
         `client_id=${constants.oauth.client.id}&` +
-        `redirect_uri=${constants.app.url}${constants.app.callbackPath}`
+        `redirect_uri=${constants.app.url}${constants.app.callbackPath}&` +
+        "scope=profile" // Add required scopes here
     );
 
     responds.redirect(`${constants.oauth.urls.authorization}?${query}`);
