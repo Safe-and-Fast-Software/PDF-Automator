@@ -12,10 +12,16 @@ import logger from './logging/logger.js';
 import login from './routes/auth/login.js';
 import path from 'path';
 import { dirname } from 'path';
+import FileStore from 'session-file-store';
+
+const FileStoreInstance = FileStore(session);
 
 const app = express();
 const publicDirectoryPath = 'public';
 const sessionConfig = {
+    store: new FileStoreInstance({
+        path: './sessions', 
+    }),
     secret: constants.app.session.secret, 
     resave: false, 
     saveUninitialized: true 

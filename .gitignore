@@ -1,5 +1,7 @@
 .vscode/
 
+sessions/
+
 # Logs
 logs
 *.log
