@@ -10,7 +10,8 @@ const constants = {
             if (urlObj.pathname !== null && urlObj.undefined !== null && urlObj.pathname !== "/") throw new TypeError(
                 `APP_URL cannot have a path, however the path: "${urlObj.pathname}" was provided`
             );
-            return APP_URL;
+            console.log(urlObj);
+            return `${urlObj.protocol}//${urlObj.hostname}${urlObj.port?`:${urlObj.port}`:""}`;
         })(),
         callbackPath : "/auth/callback",
         loginPath : "/auth/login",
@@ -26,11 +27,13 @@ const constants = {
         urls: {
             authorization: getEnvironmentVariable("OAUTH_AUTHORIZATION_URL"),
             token: getEnvironmentVariable("OAUTH_TOKEN_URL"),
+            userinfo: getEnvironmentVariable("OAUTH_USER_INFO_URL")
         },
         client: {
             id: getEnvironmentVariable("OAUTH_CLIENT_ID"),
             secret: getEnvironmentVariable("OAUTH_CLIENT_SECRET")
-        }
+        },
+        requiredGroup: getEnvironmentVariable("OAUTH_GROUP", null)
     },
 };
 

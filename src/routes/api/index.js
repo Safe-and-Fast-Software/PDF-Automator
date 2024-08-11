@@ -1,9 +1,9 @@
 import express from 'express';
 
-const router = express.Router();
+const apiRoutes = express.Router();
 
-router.get('/api', (request, responds) => {
+apiRoutes.get('/api', (request, responds) => {
     responds.send('This endpoint is public.');
 });
 
-export default router;
+export default apiRoutes;
