@@ -53,6 +53,17 @@ app.get('/', (request, responds) => {
 app.use('/api', apiRoutes);
 // app.use('/', authRoutes);
 
+app.use((error, request, responds, next) => {
+    console.error(error);
+    const respondsCode = error.status || 500
+    responds.status(respondsCode).json({
+        error: {
+            message: error.message || 'Internal Server Error',
+            status: respondsCode,
+        }
+    });
+});
+
 app.listen(constants.app.port, () => {
     console.log(`Server running on ${constants.app.url}`);
 });
