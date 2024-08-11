@@ -1,0 +1,39 @@
+{
+  "name": "pdf-creater",
+  "version": "1.0.0",
+  "description": "Creates PDFs from JSON",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Safe-and-Fast-Software/PDF-Creater.git"
+  },
+  "keywords": [
+    "PDF",
+    "JSON"
+  ],
+  "author": "SAFS",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Safe-and-Fast-Software/PDF-Creater/issues"
+  },
+  "homepage": "https://github.com/Safe-and-Fast-Software/PDF-Creater#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "passport": "^0.7.0",
+    "passport-oauth2": "^1.8.0",
+    "pdfmake": "^0.2.11",
+    "pino": "^9.3.2",
+    "pino-http": "^10.2.0",
+    "pino-pretty": "^11.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "type": "module"
+}
