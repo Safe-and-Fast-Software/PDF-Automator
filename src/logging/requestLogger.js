@@ -1,4 +1,4 @@
-import logger from "./logs/logger.js";
+import logger from "./logger.js";
 
 /**
  * Middleware that logs events.
