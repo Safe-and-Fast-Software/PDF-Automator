@@ -10,8 +10,7 @@ const constants = {
             if (urlObj.pathname !== null && urlObj.undefined !== null && urlObj.pathname !== "/") throw new TypeError(
                 `APP_URL cannot have a path, however the path: "${urlObj.pathname}" was provided`
             );
-            console.log(urlObj);
-            return `${urlObj.protocol}//${urlObj.hostname}${urlObj.port?`:${urlObj.port}`:""}`;
+            return urlObj.origin;
         })(),
         callbackPath : "/auth/callback",
         loginPath : "/auth/login",
