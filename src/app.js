@@ -6,17 +6,22 @@ import { Strategy as OAuth2Strategy } from 'passport-oauth2';
 
 import constants from './constants.js';
 import apiRoutes from './routes/api/index.js'
+import protectedPathsRouter from './routes/auth/index.js';
 import requestLogger from './logging/requestLogger.js'
 import logger from './logging/logger.js';
 import login from './routes/auth/login.js';
+import path from 'path';
+import { dirname } from 'path';
 
 const app = express();
+const publicDirectoryPath = 'public';
 const sessionConfig = {
     secret: constants.app.session.secret, 
     resave: false, 
     saveUninitialized: true 
 };
 
+app.use(express.static(publicDirectoryPath));
 app.use(requestLogger);
 app.use(session(sessionConfig));
 app.use(passport.initialize());
@@ -44,14 +49,51 @@ app.get(constants.app.callbackPath, passport.authenticate(
 
 app.get('/', (request, responds) => {
     if (request.isAuthenticated()) {
-        responds.send(`Hello ${request.user.name}`);
+        responds.send(
+            `
+            <head>
+                <title>Home - PDF Automator</title>
+            </head>
+            <body>
+                <h1>
+                    PDF Automator
+                </h1>
+                <p>
+                    Hello ${request.user.name},
+                </p>
+                <p>
+                    Welcome to PDF Automator. To get started got to the <a href="/dashboard">dashboard</a>.
+                    if you need to learn how this works, you can go to the <a href="/help">help page</a>. 
+                    To see your profile click <a href="/profile">here</a>.
+                </p>
+            </body>
+            `
+        );
     } else {
-        responds.send(`You're not logged in.<br>Please <a href="/auth/login">login with OAuth</a>.`);
+        responds.send(
+            `
+            <head>
+                <title>Home - PDF Automator</title>
+            </head>
+            <body>
+                <h1>
+                    PDF Automator
+                </h1>
+                <p>
+                    Hello there!
+                </p>
+                <p>
+                    Welcome to PDF Automator. To get started, <a href="/auth/login">login with OAuth</a> first.
+                    If you need to learn how this works, you can go to the <a href="/help">help page</a>. 
+                </p>
+            </body>
+            `
+        );
     }
 });
 
 app.use('/api', apiRoutes);
-// app.use('/', authRoutes);
+app.use('/', protectedPathsRouter);
 
 app.use((error, request, responds, next) => {
     console.error(error);
