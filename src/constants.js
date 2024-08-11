@@ -68,4 +68,6 @@ const constants = {
     },
 };
 
+console.log("Constants:", constants);
+
 export default constants; 

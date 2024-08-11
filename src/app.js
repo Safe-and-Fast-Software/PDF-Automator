@@ -10,16 +10,14 @@ import requestLogger from './logging/requestLogger.js'
 import logger from './logging/logger.js';
 
 const app = express();
+const sessionConfig = {
+    secret: constants.app.session.secret, 
+    resave: false, 
+    saveUninitialized: true 
+};
 
 app.use(requestLogger);
-app.use( session( {
-            secret: constants.app.session.secret, 
-            resave: false, 
-            saveUninitialized: true 
-        }
-    )
-);
-
+app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -48,13 +46,8 @@ passport.use(new OAuth2Strategy(
     })
 );
 
-passport.serializeUser((user, done) => {
-    done(null, user);
-});
-
-passport.deserializeUser((obj, done) => {
-    done(null, obj);
-});
+passport.serializeUser((user, done) => { done(null, user); });
+passport.deserializeUser((obj, done) => { done(null, obj); });
 
 // Define routes
 app.get(constants.app.loginPath, (request, responds) => {
@@ -62,7 +55,7 @@ app.get(constants.app.loginPath, (request, responds) => {
     const query = (
         "response_type=code&" +
         `client_id=${constants.oauth.client.id}&` +
-        `redirect_uri=${constants.app.callbackPath}`
+        `redirect_uri=${constants.app.url}${constants.app.callbackPath}`
     );
 
     responds.redirect(`${constants.oauth.urls.authorization}?${query}`);
