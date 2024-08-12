@@ -1,11 +1,12 @@
 {
   "name": "pdf-creater",
-  "version": "1.0.0",
   "description": "Creates PDFs from JSON",
+  "author": "SAFS",
+  "version": "1.0.0",
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon"
+    "dev": "nodemon --verbose"
   },
   "repository": {
     "type": "git",
@@ -15,7 +16,6 @@
     "PDF",
     "JSON"
   ],
-  "author": "SAFS",
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/Safe-and-Fast-Software/PDF-Creater/issues"
@@ -37,5 +37,16 @@
   "devDependencies": {
     "nodemon": "^3.1.4"
   },
-  "type": "module"
+  "type": "module",
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.log", 
+      "**/*.md",
+      "**/*.nix",
+      "**/.vscode/*",
+      "data/**/*",
+      "pubic/**/*",
+      "sessions/*.json"
+    ] 
+  }
 }
