@@ -19,7 +19,7 @@ const constants = {
         },
         log : {
             directory : getEnvironmentVariable("LOG_DIRECTORY", "./logs"),
-            level: "info"
+            level: getEnvironmentVariable("LOG_LEVEL", "info")
         }
     },
     oauth : {
