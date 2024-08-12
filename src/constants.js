@@ -38,4 +38,5 @@ const constants = {
 
 console.log("Constants:", constants);
 
+Object.freeze(constants);
 export default constants; 
