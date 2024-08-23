@@ -12,7 +12,7 @@ function requestLogger(request, responds, next) {
     logger.debug('Headers:', request.headers);
     logger.debug('Body:', request.body);
 
-    next();
+    return next();
 }
 
 export default requestLogger;

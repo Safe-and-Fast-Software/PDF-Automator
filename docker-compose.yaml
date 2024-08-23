@@ -1,0 +1,55 @@
+# The development stack of this application
+---
+
+services:
+
+  server:
+    image: sth123/pdf-automator
+    container_name: pdf-automator-server
+    hostname: pdf-automator-server
+    restart: unless-stopped
+    ports:
+      - 3001:80
+    networks:
+      - default
+    env_file:
+      - ./.env
+    environment:
+      REDIS_HOST: pdf-automator-cache
+      POSTGRES_HOST: pdf-automator-database
+    volumes:
+      - ${APPDATA}/server/data/:/usr/src/app/data
+    depends_on:
+      - database
+      - cache
+    working_dir: /usr/src/app
+    tty: true
+
+  database:
+    image: postgres:latest
+    container_name: pdf-automator-database
+    hostname: pdf-automator-database
+    restart: unless-stopped
+    networks:
+      - default
+    env_file:
+      - ./.env
+    volumes:
+      - ${APPDATA}/database/data:/var/lib/postgresql/data
+    tty: true
+
+  cache:
+    image: redis/redis-stack:latest
+    container_name: pdf-automator-cache
+    hostname: pdf-automator-cache
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - ${APPDATA}/cache/dаta:/root/redis
+      - ${APPDATA}/cache/config:/usr/local/etc/redis/
+    tty: true
+
+networks:
+  default:
+    name: pdf-automator
