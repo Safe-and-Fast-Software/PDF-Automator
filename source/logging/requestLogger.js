@@ -1,5 +1,3 @@
-import logger from "./logger.js";
-
 /**
  * Middleware that logs events.
  */
@@ -7,10 +5,10 @@ function requestLogger(request, responds, next) {
 
     const currentTime = new Date().toISOString();
 
-    logger.info(`[${currentTime}] ${request.method} ${request.url}`);
-    logger.debug(`[${currentTime}] ${request.method} ${request.url}`);
-    logger.debug('Headers:', request.headers);
-    logger.debug('Body:', request.body);
+    console.info(`[${currentTime}] ${request.method} ${request.url}`);
+    console.debug(`[${currentTime}] ${request.method} ${request.url}`);
+    console.debug('Headers:', request.headers);
+    console.debug('Body:', request.body);
 
     return next();
 }

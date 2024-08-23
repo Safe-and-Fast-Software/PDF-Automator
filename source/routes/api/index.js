@@ -2,7 +2,7 @@ import express from 'express';
 
 const apiRoutes = express.Router();
 
-apiRoutes.get('/api', (request, responds) => {
+apiRoutes.get('/', (request, responds) => {
     responds.send('This endpoint is public.');
 });
 

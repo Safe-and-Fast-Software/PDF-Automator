@@ -1,18 +1,16 @@
-import express from 'express';
 import pdfmake from 'pdfmake';
+
+import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 import { Strategy as OAuth2Strategy } from 'passport-oauth2';
+import FileStore from 'session-file-store';
 
 import constants from './constants.js';
 import apiRoutes from './routes/api/index.js'
 import protectedPathsRouter from './routes/auth/index.js';
 import requestLogger from './logging/requestLogger.js'
-import logger from './logging/logger.js';
 import login from './routes/auth/login.js';
-import path from 'path';
-import { dirname } from 'path';
-import FileStore from 'session-file-store';
 
 const FileStoreInstance = FileStore(session);
 
@@ -55,8 +53,7 @@ app.get(constants.app.callbackPath, passport.authenticate(
 
 app.get('/', (request, responds) => {
     if (request.isAuthenticated()) {
-        responds.send(
-            `
+        responds.send(/*html*/`
             <head>
                 <title>Home - PDF Automator</title>
             </head>
@@ -72,12 +69,10 @@ app.get('/', (request, responds) => {
                     if you need to learn how this works, you can go to the <a href="/help">help page</a>. 
                     To see your profile click <a href="/profile">here</a>.
                 </p>
-            </body>
-            `
+            </body>`
         );
     } else {
-        responds.send(
-            `
+        responds.send(/*html*/`
             <head>
                 <title>Home - PDF Automator</title>
             </head>
@@ -92,8 +87,7 @@ app.get('/', (request, responds) => {
                     Welcome to PDF Automator. To get started, <a href="/auth/login">login with OAuth</a> first.
                     If you need to learn how this works, you can go to the <a href="/help">help page</a>. 
                 </p>
-            </body>
-            `
+            </body>`
         );
     }
 });
