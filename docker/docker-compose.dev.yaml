@@ -1,0 +1,9 @@
+# Changes the server command to use nodemon instead for development.
+---
+
+services:
+  server:
+    build: 
+      context: .
+      dockerfile: dockerfile
+    command: npm run dev
