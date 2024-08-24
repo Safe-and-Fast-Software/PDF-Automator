@@ -1,0 +1,50 @@
+@base=http://localhost:3001
+ 
+### Create a new user "John Doe"
+ 
+PUT {{base}}/api/v1/user
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "apiTokenIDs": [
+        "john.doe:token1",
+        "john.doe:token2",
+        "john.doe:token3"
+    ]
+}
+
+### Create a new user "Jane Doe"
+
+PUT {{base}}/api/v1/user
+Content-Type: application/json
+
+{
+    "name": "Jane Doe",
+    "email": "jane.doe@example.com",
+    "apiTokenIDs": [
+        "jane.doe:token1",
+        "jane.doe:token2",
+        "jane.doe:token3"
+    ]
+}
+ 
+### Get All items
+ 
+GET {{base}}/api/user
+ 
+### Update item
+ 
+# PUT {{base}}/todoitems/1
+# Content-Type: application/json
+ 
+# {
+#   "id": 1,
+#   "name":"walk dog",
+#   "isComplete": true
+# }
+ 
+### Delete item
+ 
+# DELETE {{base}}/api/user/
