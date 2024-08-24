@@ -2,6 +2,7 @@ import dotenv from 'dotenv/config';
 import getEnvironmentVariable from './environmentVariable.js';
 
 const constants = {
+    github : { link : "https://github.com/Safe-and-Fast-Software/PDF-Automator" },
     app : {
         port : getEnvironmentVariable("PORT", 80),
         url: (() => {
@@ -35,8 +36,6 @@ const constants = {
         requiredGroup: getEnvironmentVariable("OAUTH_GROUP", null)
     },
 };
-
-console.log("Constants:", constants);
 
 Object.freeze(constants);
 export default constants; 

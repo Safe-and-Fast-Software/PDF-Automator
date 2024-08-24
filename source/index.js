@@ -1,111 +1,68 @@
 import pdfmake from 'pdfmake';
 
-import express from 'express';
-import session from 'express-session';
-import passport from 'passport';
-import { Strategy as OAuth2Strategy } from 'passport-oauth2';
-import FileStore from 'session-file-store';
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import constants from './constants.js';
-import apiRoutes from './routes/api/index.js'
-import protectedPathsRouter from './routes/auth/index.js';
-import requestLogger from './logging/requestLogger.js'
-import login from './routes/auth/login.js';
-
-const FileStoreInstance = FileStore(session);
-
+import express, { response } from 'express';
 const app = express();
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Request Logger ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+import requestLogger from './utilities/logging/requestLogger.js'
+app.use(requestLogger);
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Public directory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
 const publicDirectoryPath = 'public';
-const sessionConfig = {
-    store: new FileStoreInstance({
-        path: './sessions', 
+app.use(express.static(publicDirectoryPath));
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Configuring Sessions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
+
+import session from 'express-session';
+import RedisStore from "connect-redis"
+import client from "./utilities/database/client.js"
+import constants from './constants.js';
+app.use(session({
+    store : new RedisStore({
+        client: client,
+        prefix: "session:",
     }),
     secret: constants.app.session.secret, 
+    failureRedirect: '/',
     resave: false, 
     saveUninitialized: true 
-};
+}));
 
-app.use(express.static(publicDirectoryPath));
-app.use(requestLogger);
-app.use(session(sessionConfig));
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Configuring Passport ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
+
+import passport from './utilities/auth/passport.js';
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new OAuth2Strategy(
-    {
-        authorizationURL: constants.oauth.urls.authorization,
-        tokenURL: constants.oauth.urls.token,
-        clientID: constants.oauth.client.id,
-        clientSecret: constants.oauth.client.secret,
-        callbackURL: `${constants.app.url}${constants.app.callbackPath}`
-    }, login)
-);
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Configuring Passport ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
 
-passport.serializeUser((user, done) => { done(null, user); });
-passport.deserializeUser((obj, done) => { done(null, obj); });
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get(constants.app.loginPath, passport.authenticate('oauth2'));
-app.get(constants.app.callbackPath, passport.authenticate(
-    'oauth2', 
-    { failureRedirect: '/', scope: ['profile', 'email'] }), 
-    (request, responds) => { responds.redirect('/'); }
-);
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Private directory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-app.get('/', (request, responds) => {
-    if (request.isAuthenticated()) {
-        responds.send(/*html*/`
-            <head>
-                <title>Home - PDF Automator</title>
-            </head>
-            <body>
-                <h1>
-                    PDF Automator
-                </h1>
-                <p>
-                    Hello ${request.user.name},
-                </p>
-                <p>
-                    Welcome to PDF Automator. To get started got to the <a href="/dashboard">dashboard</a>.
-                    if you need to learn how this works, you can go to the <a href="/help">help page</a>. 
-                    To see your profile click <a href="/profile">here</a>.
-                </p>
-            </body>`
-        );
-    } else {
-        responds.send(/*html*/`
-            <head>
-                <title>Home - PDF Automator</title>
-            </head>
-            <body>
-                <h1>
-                    PDF Automator
-                </h1>
-                <p>
-                    Hello there!
-                </p>
-                <p>
-                    Welcome to PDF Automator. To get started, <a href="/auth/login">login with OAuth</a> first.
-                    If you need to learn how this works, you can go to the <a href="/help">help page</a>. 
-                </p>
-            </body>`
-        );
-    }
-});
+import requiresAuthentication from './utilities/auth/require-authentication.js';
+const privateDirectoryPath = 'private';
+app.use('/private', requiresAuthentication, express.static(privateDirectoryPath));
 
-app.use('/api', apiRoutes);
-app.use('/', protectedPathsRouter);
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-app.use((error, request, responds, next) => {
-    console.error(error);
-    const respondsCode = error.status || 500
-    responds.status(respondsCode).json({
-        error: {
-            message: error.message || 'Internal Server Error',
-            status: respondsCode,
-        }
-    });
-});
+import rootRouter from './routes/root-router.js';
+app.use("/", rootRouter);
 
-app.listen(constants.app.port, () => {
-    console.log(`Server running on ${constants.app.url}`);
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Error Handling ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+import handleError from './utilities/errors/error-handeling.js';
+app.use(handleError);
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+app.listen(80, () => {
+    console.log(
+        `Server running in ${process.env.NODE_ENV} mode on port 80, and accessible at \"${constants.app.url}\".`
+    );
 });

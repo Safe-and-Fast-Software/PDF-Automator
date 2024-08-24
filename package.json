@@ -46,7 +46,8 @@
       "**/*.md",
       "**/*.nix",
       "**/.vscode/*",
-      "data/**/*",
+      "data/**/*.*",
+      "**/*.http",
       "pubic/**/*",
       "**/sessions/*.json"
     ]

@@ -1,23 +1,27 @@
-import constants from '../../constants.js';
+"use-strict";
 
-const protectedPathsRouter = express.Router();
+import requiresAuthentication from "../../utilities/auth/require-authentication.js";
 
-/**
- * Middleware to check if user is authenticated, and redirect them if they're not.
- */
-function requiresAuthentication(request, responds, next) {
-    if (request.isAuthenticated()) return next();
-    responds.redirect(constants.app.loginPath);
-}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-protectedPathsRouter.get('/dashboard', requiresAuthentication, (request, responds) => {
+import Router from "express";
+const profileRouter = Router();
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+// None
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+
+profileRouter.get('/dashboard', requiresAuthentication, (request, responds) => {
     responds.send(/*html*/`
         <html>
             <head>
-                <title>dashboard</title>
+                <title>Dashboard - PDF Automator</title>
             </head>
             <body>
-                <h1>dashboard</h1>
+                <h1>Dashboard</h1>
                 <p>
                     Hello ${request.user.name}, welcome to your dashboard!
                 </p>
@@ -31,15 +35,14 @@ protectedPathsRouter.get('/dashboard', requiresAuthentication, (request, respond
             </body>
         </html>`
     );
-});
+}); 
 
-protectedPathsRouter.get('/profile', requiresAuthentication, (request, responds) => {
+profileRouter.get('/', requiresAuthentication, (request, responds) => {
     const user = request.user;
-    console.log(user);
     responds.send(/*html*/`
         <html>
             <head>
-                <title>User Profile</title>
+                <title>User Profile - PDF Automator</title>
             </head>
             <body>
                 <h1>User Profile</h1>
@@ -57,4 +60,6 @@ protectedPathsRouter.get('/profile', requiresAuthentication, (request, responds)
     );
 });
 
-export default protectedPathsRouter;
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+export default profileRouter;
