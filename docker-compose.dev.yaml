@@ -8,13 +8,10 @@ services:
       dockerfile: dockerfile
     volumes:
       - .:/app/
+      - ~/.bashrc:/root/.bashrc:ro
     command: npm run dev
   
   database:
-    ports:
-      - 5432:5432
-
-  cache:
     ports:
       - 6379:6379
       - 8001:8001

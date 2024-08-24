@@ -9,22 +9,20 @@ services:
     hostname: pdf-automator-server
     restart: unless-stopped
     ports:
-      - 3001:80
+      - ${PORT}:80
     networks:
       - default
     env_file:
       - ./.env
     environment:
-      REDIS_HOST: pdf-automator-cache
-      POSTGRES_HOST: pdf-automator-database
+      REDIS_HOST: pdf-automator-database
     depends_on:
       - database
-      - cache
     working_dir: /app
     tty: true
 
   database:
-    image: postgres:latest
+    image: redis/redis-stack:latest
     container_name: pdf-automator-database
     hostname: pdf-automator-database
     restart: unless-stopped
@@ -33,19 +31,8 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ${APPDATA}/database/data:/var/lib/postgresql/data
-    tty: true
-
-  cache:
-    image: redis/redis-stack:latest
-    container_name: pdf-automator-cache
-    hostname: pdf-automator-cache
-    restart: unless-stopped
-    env_file:
-      - ./.env
-    volumes:
-      - ${APPDATA}/cache/dаta:/root/redis
-      - ${APPDATA}/cache/config:/usr/local/etc/redis/
+      - ${APPDATA}/database/dаta:/var/lib/redis/data
+      - ${APPDATA}/database/config:/usr/local/etc/redis/
     tty: true
 
 networks:
