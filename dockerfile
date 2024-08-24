@@ -1,5 +1,5 @@
 FROM node:21
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Install dependencies before copying the rest of the application code.
 COPY ../package.json ./

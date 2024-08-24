@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: dockerfile
     volumes:
-      - ./source:/usr/src/app/source:ro
+      - .:/app/
     command: npm run dev
   
   database:

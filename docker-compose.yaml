@@ -17,12 +17,10 @@ services:
     environment:
       REDIS_HOST: pdf-automator-cache
       POSTGRES_HOST: pdf-automator-database
-    volumes:
-      - ${APPDATA}/server/data/:/usr/src/app/data
     depends_on:
       - database
       - cache
-    working_dir: /usr/src/app
+    working_dir: /app
     tty: true
 
   database:
