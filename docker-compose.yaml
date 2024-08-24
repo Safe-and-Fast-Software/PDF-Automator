@@ -15,6 +15,7 @@ services:
     env_file:
       - ./.env
     environment:
+      NODE_ENV: production
       REDIS_HOST: pdf-automator-database
     depends_on:
       - database

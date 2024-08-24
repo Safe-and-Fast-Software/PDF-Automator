@@ -6,6 +6,8 @@ services:
     build: 
       context: .
       dockerfile: dockerfile
+    environment:
+      NODE_ENV: development
     volumes:
       - .:/app/
       - ~/.bashrc:/root/.bashrc:ro
