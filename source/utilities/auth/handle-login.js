@@ -45,7 +45,7 @@ async function getUserData(accessToken) {
     }
 }
 
-export default async function login(accessToken, refreshToken, profile, done) {
+export default async function handleLogin(accessToken, refreshToken, profile, done) {
     try {
                
         const userProfile = await getUserData(accessToken);
