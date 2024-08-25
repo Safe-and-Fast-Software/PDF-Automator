@@ -3,25 +3,22 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 import Router from "express";
-const rootRouter = Router();
+export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-//// import authRouter from "./auth/auth-router.js"
-//// rootRouter.use("/auth", authRouter);
+import { router as apiRouter} from "./api/router.js"
+router.use("/api", apiRouter);
 
-import apiRouter from "./api/api-router.js"
-rootRouter.use("/api", apiRouter);
+import { router as profileRouter} from "./profile/router.js"
+router.use("/profile", profileRouter);
 
-import profileRouter from "./profile/profile-router.js"
-rootRouter.use("/profile", profileRouter);
-
-import authRouter from "./auth/auth-router.js";
-rootRouter.use("/auth", authRouter);
+import { router as authRouter} from "./auth/router.js";
+router.use("/auth", authRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-rootRouter.get('/', (request, responds) => {
+router.get('/', (request, responds) => {
     if (request.isAuthenticated()) {
         responds.send(/*html*/`
             <!DOCTYPE html>
@@ -65,5 +62,3 @@ rootRouter.get('/', (request, responds) => {
 });
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-export default rootRouter;
