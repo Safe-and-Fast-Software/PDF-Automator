@@ -5,16 +5,16 @@ import constants from "../../constants.js";
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 import Router from "express";
-const apiRouter = Router();
+export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import apiV1Router from "./v1/api-v1-router.js"
-apiRouter.use("/v1", apiV1Router);
+import { router as apiV1Router} from "./v1/router.js"
+router.use("/v1", apiV1Router);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-apiRouter.get('/', (request, responds) => {
+router.get('/', (request, responds) => {
     responds.send(/*html*/`
         <!DOCTYPE html>
         <html lang="en">
@@ -37,4 +37,4 @@ apiRouter.get('/', (request, responds) => {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-export default apiRouter;
+export default router;
