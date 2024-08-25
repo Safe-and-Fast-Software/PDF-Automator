@@ -141,7 +141,7 @@ router.delete("/:id", requiresAuthentication, async (request, responds) => {
 
     try {
 
-        await repository.delete(id);
+        await repository.remove(id);
         
         /* Giving a JSON responds if it's not an HTMX request */ {
             if (isNotAnHtmxRequest) return ( responds.status(StatusCodes.NO_CONTENT)
