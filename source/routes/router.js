@@ -10,11 +10,14 @@ export const router = Router();
 import { router as apiRouter} from "./api/router.js"
 router.use("/api", apiRouter);
 
+import { router as authRouter} from "./auth/router.js";
+router.use("/auth", authRouter);
+
 import { router as profileRouter} from "./profile/router.js"
 router.use("/profile", profileRouter);
 
-import { router as authRouter} from "./auth/router.js";
-router.use("/auth", authRouter);
+import { router as searchRouter} from "./search/router.js"
+router.use("/search", searchRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
