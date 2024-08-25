@@ -29,7 +29,6 @@ router.get('/', requiresAuthentication, (request, responds) => {
                 from here you can search for customers.
             </p>
             <form hx-get="/api/v1/customer/all" hx-target="#search-results" hx-trigger="submit">
-                <!-- hx-trigger="keyup changed delay:300ms"> -->
                 <div class="form-group">
                     <label for="customer-name">Customer Name:</label>
                     <input type="text" id="customer-name" name="name" placeholder="John Doe">
@@ -51,18 +50,22 @@ router.get('/', requiresAuthentication, (request, responds) => {
                     <input type="text" id="customer-street2" name="street2" placeholder="myStreet 1">
                 </div>
                 <div class="form-group">
+                    <label for="customer-city">Customer city:</label>
+                    <input type="text" id="customer-city" name="city" placeholder="New York">
+                </div>
+                <div class="form-group">
                     <label for="customer-zip">Customer zip code:</label>
                     <input type="text" id="customer-zip" name="zip" placeholder="12345">
                 </div>
                 <div class="form-group">
-                    <label for="customer-city">Customer city:</label>
-                    <input type="text" id="customer-city" name="city" placeholder="New York">
+                    <label for="customer-country">Customer country code:</label>
+                    <input type="text" id="customer-country" name="country" placeholder="12345">
                 </div>
                 <div class="form-group">
                     <button type="submit">Search</button>
                 </div>
             </form>
-            <div id="search-results" hx-get="/api/v1/customer/all" hx-trigger="revealed" class="results"></div>
+            <ul id="search-results" hx-get="/api/v1/customer/all" hx-trigger="revealed" class="results"></ul>
         </body>`
     );
 });
