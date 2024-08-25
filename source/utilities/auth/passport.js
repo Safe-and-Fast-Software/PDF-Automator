@@ -8,18 +8,20 @@ import getEnvironmentVariable from '../../environmentVariable.js';
 
 const url = new URL(getEnvironmentVariable("OAUTH_CONFIGURATION_URL"));
 const response = await axios.get(url);
-const oAuthConfiguration = await response.data;
+export const oAuthConfiguration = await response.data;
+
 const oAuth2Strategy = new OAuth2Strategy({
     authorizationURL: oAuthConfiguration.authorization_endpoint,
     tokenURL: oAuthConfiguration.token_endpoint,
     clientID: getEnvironmentVariable("OAUTH_CLIENT_ID"),
     clientSecret: getEnvironmentVariable("OAUTH_CLIENT_SECRET"),
-    callbackURL: `${constants.app.url}/auth/callback}`
+    callbackURL: `${constants.app.url}/auth/callback`
 }, handleLogin);
 
 passport.use(oAuth2Strategy);
 
 passport.serializeUser((user, done) => { done(null, user); });
 passport.deserializeUser((obj, done) => { done(null, obj); });
+
 
 export default passport;

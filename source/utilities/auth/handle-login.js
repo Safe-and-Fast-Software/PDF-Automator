@@ -1,6 +1,7 @@
 import axios from 'axios';
 import constants from '../../constants.js';
 import { StatusCodes } from "http-status-codes";
+import { oAuthConfiguration } from './passport.js';
 
 /** A general login error. */
 export class LoginError extends Error {
@@ -35,7 +36,7 @@ export class MissingInformationLoginError extends LoginError {
 async function getUserData(accessToken) {
     try {
         
-        const response = await axios.get(`${constants.oauth.urls.userinfo}`, {
+        const response = await axios.get(new URL(oAuthConfiguration.userinfo_endpoint), {
             headers: { Authorization: `Bearer ${accessToken}` }
         });
         
@@ -53,6 +54,7 @@ export default async function handleLogin(accessToken, refreshToken, profile, do
         console.debug("Profile:", userProfile);
 
         /* Checking the user's information*/ {
+            if (! userProfile.sub) throw new MissingInformationLoginError(`Subject is not truthy: ${userProfile.sub}`);
             if (! userProfile.name) throw new MissingInformationLoginError(`Username is not truthy: ${userProfile.name}`);
             if (! userProfile.email) throw new MissingInformationLoginError(`email is not truthy: ${userProfile.email}`);
             if (! userProfile.groups) throw new MissingInformationLoginError(`email is not truthy: ${userProfile.groups}`);
