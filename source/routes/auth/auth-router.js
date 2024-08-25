@@ -1,5 +1,6 @@
 "use-strict";
 
+import { StatusCodes } from 'http-status-codes';
 import passport from '../../utilities/auth/passport.js';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -17,7 +18,7 @@ authRouter.get("/login", passport.authenticate('oauth2'));
 
 authRouter.get("/callback", passport.authenticate('oauth2', 
     { failureRedirect: '/auth/failure', scope: ['profile', 'email'] }), 
-    (request, responds) => { responds.redirect('/profile'); }
+    (request, responds) => { return responds.redirect('/profile'); }
 );
 
 authRouter.get('/logout', (request, responds) => {
@@ -26,15 +27,13 @@ authRouter.get('/logout', (request, responds) => {
         if (! error) return responds.redirect('/');
 
         console.error(error);
-        return responds.status(500).send('Failed to log you out.');
+        return responds.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Failed to log you out.');
     });
 });
 
 authRouter.get('/failure', (request, responds) => {
-    return responds.status(500).send('Failed to log you in');
+    return responds.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Failed to log you in');
 });
-
-
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
