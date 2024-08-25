@@ -1,4 +1,3 @@
-import constants from '../../constants.js';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
 /**
@@ -6,10 +5,12 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
  */
 export default function requiresAuthentication(request, responds, next) {
     
-    const isNotHtmxRequest = (request.headers['hx-request'] === undefined);
-
+    /* disallowing HTMX unauthorized requests */ {
+        if (request.headers['hx-request']) return responds.status(StatusCodes.BAD_REQUEST)
+            .send(ReasonPhrases.BAD_REQUEST);
+    }
+    
     if (request.isAuthenticated()) return next();
-    if (isNotHtmxRequest) responds.redirect(constants.app.loginPath);
 
-    responds.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
+    return responds.status(StatusCodes.UNAUTHORIZED).redirect("/auth/login");
 }

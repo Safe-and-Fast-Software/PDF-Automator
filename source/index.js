@@ -21,12 +21,13 @@ import session from 'express-session';
 import RedisStore from "connect-redis"
 import client from "./utilities/database/client.js"
 import constants from './constants.js';
+import getEnvironmentVariable from './environmentVariable.js';
 app.use(session({
     store : new RedisStore({
         client: client,
         prefix: "session:",
     }),
-    secret: constants.app.session.secret, 
+    secret: getEnvironmentVariable("SESSION_SECRET"), 
     failureRedirect: '/',
     resave: false, 
     saveUninitialized: true 
