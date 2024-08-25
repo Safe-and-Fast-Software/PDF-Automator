@@ -144,18 +144,18 @@ router.delete("/:id", requiresAuthentication, async (request, responds) => {
         await repository.remove(id);
         
         /* Giving a JSON responds if it's not an HTMX request */ {
-            if (isNotAnHtmxRequest) return ( responds.status(StatusCodes.NO_CONTENT)
+            if (isNotAnHtmxRequest) return ( responds.status(StatusCodes.OK)
                 .type('application/json')
                 .send({ 
-                    status: StatusCodes.NO_CONTENT, 
-                    message: `${ReasonPhrases.NO_CONTENT}: user with id ${id} deleted Successfully.`
+                    status: StatusCodes.OK, 
+                    message: `${ReasonPhrases.OK}: user with id ${id} deleted Successfully.`
                 })
             );
         }
 
         return ( responds // HTMX responds
-            .status(StatusCodes.NO_CONTENT)
-            .send(`${StatusCodes.NO_CONTENT}: Successfully deleted user!`)
+            .status(StatusCodes.OK)
+            .send(`${StatusCodes.OK}: Successfully deleted user!`)
         ); 
 
     } catch ( error ) {
