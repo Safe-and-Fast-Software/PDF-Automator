@@ -10,10 +10,11 @@ const app = express();
 import requestLogger from './utilities/logging/requestLogger.js'
 app.use(requestLogger);
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Public directory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Static directory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-const publicDirectoryPath = 'public';
-app.use(express.static(publicDirectoryPath));
+import requiresAuthentication from './utilities/auth/require-authentication.js';
+app.use('/private', requiresAuthentication, express.static('private'));
+app.use(express.static("public"));
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Configuring Sessions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
 
@@ -39,20 +40,14 @@ import passport from './utilities/auth/passport.js';
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Configuring Passport ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getting Request Params and Body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Private directory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-import requiresAuthentication from './utilities/auth/require-authentication.js';
-const privateDirectoryPath = 'private';
-app.use('/private', requiresAuthentication, express.static(privateDirectoryPath));
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import rootRouter from './routes/root-router.js';
+import { router as rootRouter } from './routes/router.js';
 app.use("/", rootRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Error Handling ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -63,6 +58,13 @@ app.use(handleError);
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 app.listen(80, () => {
+
+    if (process.env.NODE_ENV === "development") console.warn(
+        `[WARNING] Server running in ${process.env.NODE_ENV} mode. ` +
+        `Do *NOT* run this in production as it contains the ability to ignore all authentication to help test. ` +
+        `Running this as production means API is complete exposed if the right headers are supplied.`
+    );
+    
     console.log(
         `Server running in ${process.env.NODE_ENV} mode on port 80, and accessible at \"${constants.app.url}\".`
     );
