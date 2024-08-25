@@ -24,6 +24,7 @@ rootRouter.use("/auth", authRouter);
 rootRouter.get('/', (request, responds) => {
     if (request.isAuthenticated()) {
         responds.send(/*html*/`
+            <!DOCTYPE html>
             <head>
                 <title>Home - PDF Automator</title>
             </head>
@@ -43,6 +44,7 @@ rootRouter.get('/', (request, responds) => {
         );
     } else {
         responds.send(/*html*/`
+            <!DOCTYPE html>
             <head>
                 <title>Home - PDF Automator</title>
             </head>

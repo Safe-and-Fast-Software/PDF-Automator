@@ -16,6 +16,7 @@ const profileRouter = Router();
 
 profileRouter.get('/dashboard', requiresAuthentication, (request, responds) => {
     responds.send(/*html*/`
+        <!DOCTYPE html>
         <html>
             <head>
                 <title>Dashboard - PDF Automator</title>
@@ -40,6 +41,7 @@ profileRouter.get('/dashboard', requiresAuthentication, (request, responds) => {
 profileRouter.get('/', requiresAuthentication, (request, responds) => {
     const user = request.user;
     responds.send(/*html*/`
+        <!DOCTYPE html>
         <html>
             <head>
                 <title>User Profile - PDF Automator</title>
