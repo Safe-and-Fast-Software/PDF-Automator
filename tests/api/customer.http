@@ -1,0 +1,52 @@
+@base=http://localhost:3001/api/v1/customer
+ 
+### Create a new customer "John Doe"
+ 
+PUT {{base}}
+Content-Type: application/json
+
+{
+           "name" : "John Doe",
+    "phoneNumber" : "1234567890",
+          "email" : "john.doe@example.com",
+        "street1" : "someStreet 1",
+        "street2" : "",
+     "postalCode" : "",
+           "city" : "New York",
+        "country" : "United States"
+}
+
+### Create a new customer "Jane Doe"
+
+PUT {{base}}
+Content-Type: application/json
+
+{
+    "name" : "jane Doe",
+    "phoneNumber" : "0123456789",
+    "email" : "jane.doe@example.com",
+    "street1" : "someStreet 1",
+    "street2" : "",
+    "postalCode" : "",
+    "city" : "Amsterdam",
+    "country" : "The Netherlands"
+}
+ 
+### Get All items
+ 
+GET {{base}}/all
+ 
+### Update item
+ 
+# PUT {{base}}/todoitems/1
+# Content-Type: application/json
+ 
+# {
+#   "id": 1,
+#   "name":"walk dog",
+#   "isComplete": true
+# }
+ 
+### Delete item
+ 
+# DELETE {{base}}/api/user/
