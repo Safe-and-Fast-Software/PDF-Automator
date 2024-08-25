@@ -6,7 +6,8 @@ export default function handleError(error, request, responds, next) {
 
     console.error(
         `A ${request.method} method for ${request.url} failed with the following error:`, 
-        error.message
+        error.message,
+        error
     );
 
     const respondsCode = error.status || 500
