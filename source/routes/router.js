@@ -13,6 +13,9 @@ router.use("/api", apiRouter);
 import { router as authRouter} from "./auth/router.js";
 router.use("/auth", authRouter);
 
+import { router as newRouter} from "./new/router.js"
+router.use("/new", newRouter);
+
 import { router as profileRouter} from "./profile/router.js"
 router.use("/profile", profileRouter);
 
