@@ -60,7 +60,8 @@ userApiRoutes.get("/by-name/:name", async (request, responds) => {
 
     try {
 
-        if (isHtmxRequest) return responds.status(StatusCodes.BAD_REQUEST).send(`This is not an HTMX endpoint.`); 
+        if (isHtmxRequest) return responds.status(StatusCodes.BAD_REQUEST)
+            .send(`${ReasonPhrases.BAD_REQUEST}: Not an HTMX endpoint.`);
 
         const user = await userRepository.search().where("name").is.equalTo(name).return.first();
         
@@ -90,7 +91,8 @@ userApiRoutes.get("/by-id/:id", async (request, responds) => {
     
     try {
 
-        if (isHtmxRequest) return responds.status(StatusCodes.BAD_REQUEST).send(`This is not an HTMX endpoint.`); 
+        if (isHtmxRequest) return responds.status(StatusCodes.BAD_REQUEST)
+            .send(`${ReasonPhrases.BAD_REQUEST}: Not an HTMX endpoint.`);
 
         const user = await userRepository.fetch(id);
         
@@ -100,7 +102,9 @@ userApiRoutes.get("/by-id/:id", async (request, responds) => {
         
         console.error(error);
 
-        if (isHtmxRequest) return responds.status(StatusCodes.BAD_REQUEST).send(`This is not an HTMX endpoint.`); 
+        if (isHtmxRequest) return responds.status(StatusCodes.BAD_REQUEST)
+            .send(`${ReasonPhrases.BAD_REQUEST}: Not an HTMX endpoint.`);
+            
         else return responds.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ 
             status: StatusCodes.INTERNAL_SERVER_ERROR, 
             error: ReasonPhrases.INTERNAL_SERVER_ERROR
