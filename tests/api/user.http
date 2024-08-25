@@ -1,8 +1,8 @@
-@base=http://localhost:3001
+@base=http://localhost:3001/api/v1/user
  
 ### Create a new user "John Doe"
  
-PUT {{base}}/api/v1/user
+PUT {{base}}/
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 ### Create a new user "Jane Doe"
 
-PUT {{base}}/api/v1/user
+PUT {{base}}/
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Content-Type: application/json
  
 ### Get All items
  
-GET {{base}}/api/user
+GET {{base}}/all
  
 ### Update item
  
