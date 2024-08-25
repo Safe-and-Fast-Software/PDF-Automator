@@ -4,7 +4,6 @@ import getEnvironmentVariable from './environmentVariable.js';
 const constants = {
     github : { link : "https://github.com/Safe-and-Fast-Software/PDF-Automator" },
     app : {
-        port : getEnvironmentVariable("PORT", 80),
         url: (() => {
             const APP_URL = getEnvironmentVariable("APP_URL");
             const urlObj = new URL(APP_URL);
@@ -13,26 +12,8 @@ const constants = {
             );
             return urlObj.origin;
         })(),
-        callbackPath : "/auth/callback",
-        loginPath : "/auth/login",
-        session : {
-            secret : getEnvironmentVariable("SESSION_SECRET")
-        },
-        log : {
-            directory : getEnvironmentVariable("LOG_DIRECTORY", "./logs"),
-            level: getEnvironmentVariable("LOG_LEVEL", "info")
-        }
     },
     oauth : {
-        urls: {
-            authorization: getEnvironmentVariable("OAUTH_AUTHORIZATION_URL"),
-            token: getEnvironmentVariable("OAUTH_TOKEN_URL"),
-            userinfo: getEnvironmentVariable("OAUTH_USER_INFO_URL")
-        },
-        client: {
-            id: getEnvironmentVariable("OAUTH_CLIENT_ID"),
-            secret: getEnvironmentVariable("OAUTH_CLIENT_SECRET")
-        },
         requiredGroup: getEnvironmentVariable("OAUTH_GROUP", null)
     },
 };
