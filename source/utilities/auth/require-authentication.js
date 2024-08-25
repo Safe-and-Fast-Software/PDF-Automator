@@ -18,11 +18,6 @@ export default function requiresAuthentication(request, responds, next) {
         }
     }
 
-    /* disallowing HTMX unauthorized requests */ {
-        if (request.headers['hx-request']) return responds.status(StatusCodes.BAD_REQUEST)
-            .send(`${ReasonPhrases.BAD_REQUEST}: Not an HTMX endpoint.`);
-    }
-    
     if (request.isAuthenticated()) return next();
 
     console.log(`Unauthenticated request to ${request.method} at ${request.originalUrl}.`)
