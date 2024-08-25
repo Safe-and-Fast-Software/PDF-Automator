@@ -20,6 +20,7 @@
   "bugs": {
     "url": "https://github.com/Safe-and-Fast-Software/PDF-Creater/issues"
   },
+  "private": true,
   "homepage": "https://github.com/Safe-and-Fast-Software/PDF-Creater#readme",
   "dependencies": {
     "ajv": "^8.17.1",
