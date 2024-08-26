@@ -5,6 +5,9 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
  */
 export default function requiresAuthentication(request, responds, next) {
     
+    // if it's authenticated, then there's no issue and we move on.
+    if (request.isAuthenticated()) return next();
+
     /* Under the right headers and development mode, ignore authorization completely */ {
         const ignoreAuthorizationHeader = request.headers["x-ignore-authorization-for-this-request"];
         const requestToIgnoreAuthorization = ignoreAuthorizationHeader === "yes";
@@ -18,8 +21,18 @@ export default function requiresAuthentication(request, responds, next) {
         }
     }
 
-    if (request.isAuthenticated()) return next();
+    console.warn(`Unauthenticated request to ${request.method} at ${request.originalUrl}.`)
 
-    console.log(`Unauthenticated request to ${request.method} at ${request.originalUrl}.`)
-    return responds.status(StatusCodes.UNAUTHORIZED).redirect("/auth/login");
+    /* If it's not a background request made by HTMX, then redirect them to login instead. */ {
+        const isNotAnHtmxRequest = (request.headers["hx-request"] === undefined);
+        if (isNotAnHtmxRequest) return ( responds
+            .status(StatusCodes.UNAUTHORIZED)
+            .redirect("/auth/login")
+        );
+    }
+
+    return ( responds // else mention they're unauthorized
+        .status(StatusCodes.UNAUTHORIZED)
+        .send(ReasonPhrases.UNAUTHORIZED)
+    );
 }
