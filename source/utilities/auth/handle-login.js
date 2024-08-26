@@ -1,34 +1,10 @@
 import axios from 'axios';
 import constants from '../../constants.js';
-import { StatusCodes } from "http-status-codes";
 import { oAuthConfiguration } from './passport.js';
 
-/** A general login error. */
-export class LoginError extends Error {
-    constructor(message) {
-        super(message);
-        this.code = StatusCodes.INTERNAL_SERVER_ERROR;
-        Error.captureStackTrace(this, this.constructor);
-    }
-}
-
-/** For when the user is not part of the required group. */
-export class NotPartOfAuthorizedGroupError extends LoginError {
-    constructor(message) {
-        super(message);
-        this.code = StatusCodes.FORBIDDEN;
-        Error.captureStackTrace(this, this.constructor);
-    }
-}
-
-/** For when there's missing information. */
-export class MissingInformationLoginError extends LoginError {
-    constructor(message) {
-        super(message);
-        this.code = StatusCodes.NOT_ACCEPTABLE;
-        Error.captureStackTrace(this, this.constructor);
-    }
-}
+import LoginError from './errors/login-error.js';
+import MissingInformationLoginError from './errors/missing-information-error.js';
+import NotPartOfAuthorizedGroupError from './errors/not-part-of-authorized-group-error.js';
 
 /**
  * 
