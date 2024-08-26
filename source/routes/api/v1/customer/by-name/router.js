@@ -30,7 +30,7 @@ router.get("/:name", requiresAuthentication, async (request, responds) => {
     try {
 
         const customer = (await repository.search()
-            .where("name").is.equalTo(name)
+            .where("name").matchesExactly(name)
             .return.first()
         );
 
