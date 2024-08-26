@@ -6,9 +6,9 @@ import LoginError from './errors/login-error.js';
 import MissingInformationLoginError from './errors/missing-information-error.js';
 import NotPartOfAuthorizedGroupError from './errors/not-part-of-authorized-group-error.js';
 
-/**
- * 
- */
+import { repository as userRepository } from "../database/schemas/user.js";
+
+/** Fetches the user's information from the user info end point or throws an error if that fails. */
 async function getUserData(accessToken) {
     try {
         
@@ -23,30 +23,33 @@ async function getUserData(accessToken) {
     }
 }
 
+async function initializeUserWithDataBase(user) {
+
+    const id = user.sub;
+    /* Checking if the user has a truthy identifier */ {
+        if (! id) throw new MissingInformationLoginError(
+            `User identifier is not truthy: ${id}, identifier is required.`
+        );
+    }
+    
+    const userFromDataBase = await userRepository.fetch(id);
+
+    console.debug("userFromDataBase:", userFromDataBase);
+
+    userFromDataBase.name  = ( userFromDataBase.name  ? userFromDataBase.name  : user.name  );
+    userFromDataBase.email = ( userFromDataBase.email ? userFromDataBase.email : user.email );
+
+    const savedUser = await userRepository.save(id, userFromDataBase);
+    return savedUser;
+}
+
 export default async function handleLogin(accessToken, refreshToken, profile, done) {
+
     try {
                
         const userProfile = await getUserData(accessToken);
-        console.debug("Profile:", userProfile);
-
-        /* Checking the user's information*/ {
-            if (! userProfile.sub) throw new MissingInformationLoginError(`Subject is not truthy: ${userProfile.sub}`);
-            if (! userProfile.name) throw new MissingInformationLoginError(`Username is not truthy: ${userProfile.name}`);
-            if (! userProfile.email) throw new MissingInformationLoginError(`email is not truthy: ${userProfile.email}`);
-            if (! userProfile.groups) throw new MissingInformationLoginError(`email is not truthy: ${userProfile.groups}`);
-            if (! userProfile.preferred_username) throw new MissingInformationLoginError(
-                `preferred_username is not truthy: ${userProfile.preferred_username}`
-            );   
-        }
-
-        const user = {
-            accessToken,
-            refreshToken,
-            name: userProfile.name,
-            email: userProfile.email,
-            username: userProfile.preferred_username,
-        };
-
+        const user = await initializeUserWithDataBase(userProfile);
+        
         /* Checking if the group is correct */{
             const requiredGroup = constants.oauth.requiredGroup;
             console.log("requiredGroup", requiredGroup);
@@ -56,12 +59,14 @@ export default async function handleLogin(accessToken, refreshToken, profile, do
                 requiredGroup !== undefined);
             if (! userProfile.groups.includes(requiredGroup) && requiredGroupIsDefined) {
                 throw new NotPartOfAuthorizedGroupError(
-                    `The user (${userProfile.name}) is not in the group: \"${requiredGroup}\", when this is required. `
-                    + `The user is part of the following groups: ${userProfile.groups}, but not \"${requiredGroup}\".`
+                    `The user (${userProfile.name}) is not in the group: \"${requiredGroup}\", ` + 
+                    `when this is required. The user is part of the following groups: ` + 
+                    `${userProfile.groups.join(", ")}. Which does not contain the required group \"${requiredGroup}\".`
                 );
             }
         }
 
+        const result = { ...user, accessToken, refreshToken };
         return done(null, user);
 
     } catch (error) {
