@@ -2,7 +2,7 @@ import { Schema, Repository } from 'redis-om';
 import client from '../client.js';
 import Ajv from 'ajv';
 
-const redisSchema = new Schema("customer", {
+const redisSchema = new Schema("user", {
     name:        { type: 'text',   caseSensitive: false },
     phone:       { type: 'text',   caseSensitive: false },
     email:       { type: 'text',   caseSensitive: false },
