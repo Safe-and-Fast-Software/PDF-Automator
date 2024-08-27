@@ -2,6 +2,7 @@
 
 import { StatusCodes } from "http-status-codes";
 import handleNonHtmxRequestBySendingBaseDocument from "../utilities/responds/htmx/handle-non-htmx-request-by-sending-base-document.js";
+import constants from "../constants.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -31,14 +32,14 @@ router.get('/', handleNonHtmxRequestBySendingBaseDocument, (request, responds) =
     return ( responds
         .status(StatusCodes.OK)
         .type("text/html")
-        .send("this is the home page")
+        .render("pages/home", { sourceCodeURL: constants.github.link })
     );
 });
 
 router.get("/session", (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
-        // .type("text/html")
+        .type("application/json")
         .send({ user: { ...request.user}, session: { ...request.session } })
     );
 });
