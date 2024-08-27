@@ -1,6 +1,6 @@
 "use-strict";
 
-import { StatusCodes } from "http-status-codes";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import handleNonHtmxRequestBySendingBaseDocument from "../utilities/responds/htmx/handle-non-htmx-request-by-sending-base-document.js";
 import constants from "../constants.js";
 
@@ -41,6 +41,13 @@ router.get("/session", (request, responds) => {
         .status(StatusCodes.OK)
         .type("application/json")
         .send({ user: { ...request.user}, session: { ...request.session } })
+    );
+});
+
+router.get("/health-check", (request, responds) => {
+    return ( responds
+        .status(StatusCodes.OK)
+        .send(ReasonPhrases.OK)
     );
 });
 
