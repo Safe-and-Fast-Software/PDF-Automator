@@ -7,6 +7,7 @@ import MissingInformationLoginError from './errors/missing-information-error.js'
 import NotPartOfAuthorizedGroupError from './errors/not-part-of-authorized-group-error.js';
 
 import { repository as userRepository } from "../database/schemas/user.js";
+import { EntityId } from 'redis-om';
 
 /** Fetches the user's information from the user info end point or throws an error if that fails. */
 async function getUserData(accessToken) {
@@ -40,6 +41,7 @@ async function initializeUserWithDataBase(user) {
     userFromDataBase.email = ( userFromDataBase.email ? userFromDataBase.email : user.email );
 
     const savedUser = await userRepository.save(id, userFromDataBase);
+
     return savedUser;
 }
 
@@ -49,7 +51,7 @@ export default async function handleLogin(accessToken, refreshToken, profile, do
                
         const userProfile = await getUserData(accessToken);
         const user = await initializeUserWithDataBase(userProfile);
-        
+
         /* Checking if the group is correct */{
             const requiredGroup = constants.oauth.requiredGroup;
             console.log("requiredGroup", requiredGroup);
@@ -66,8 +68,8 @@ export default async function handleLogin(accessToken, refreshToken, profile, do
             }
         }
 
-        const result = { ...user, accessToken, refreshToken };
-        return done(null, user);
+        const result = { ...user, id: user[EntityId], accessToken, refreshToken };
+        return done(null, result);
 
     } catch (error) {
         return done(error);

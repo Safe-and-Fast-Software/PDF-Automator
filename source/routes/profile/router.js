@@ -1,6 +1,9 @@
 "use-strict";
 
+import { StatusCodes } from "http-status-codes";
 import requiresAuthentication from "../../utilities/auth/require-authentication.js";
+import handleNonHtmxRequestBySendingBaseDocument from "../../utilities/responds/htmx/handle-non-htmx-request-by-sending-base-document.js";
+import { EntityId } from "redis-om";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -9,27 +12,15 @@ export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-router.get('/', requiresAuthentication, (request, responds) => {
-    const user = request.user;
-    responds.send(/*html*/`
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <title>User Profile - PDF Automator</title>
-            </head>
-            <body>
-                <h1>User Profile</h1>
-                <p>
-                    This is all the application has saved about you. 
-                    If you want to change anything you'll have to contact your Oauth provider.
-                </p>    
-                <u>
-                    ${user.name?/*html*/`<li><b>Full Name</b>: ${user.name}</li>`:``}
-                    ${user.email?/*html*/`<li><b>eMail</b>: ${user.email}</li>`:``}
-                    ${user.username?/*html*/`<li><b>Username</b>: ${user.username}</li>`:``}
-                </u> 
-            </body>
-        </html>`
+router.get('/', requiresAuthentication, handleNonHtmxRequestBySendingBaseDocument, (request, responds) => {
+    console.log("PROFILE: request.user", request.user);
+    console.log("PROFILE: request.session.passport.user", request.session.passport.user);
+    return ( responds
+        .status(StatusCodes.OK)
+        .type("text/html")
+        .render("pages/profile", {
+            user: { ...request.user, id: request.session.passport.user}
+        })
     );
 });
 

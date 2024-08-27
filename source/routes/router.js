@@ -1,5 +1,8 @@
 "use-strict";
 
+import { StatusCodes } from "http-status-codes";
+import handleNonHtmxRequestBySendingBaseDocument from "../utilities/responds/htmx/handle-non-htmx-request-by-sending-base-document.js";
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 import Router from "express";
@@ -24,47 +27,20 @@ router.use("/search", searchRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-router.get('/', (request, responds) => {
-    if (request.isAuthenticated()) {
-        responds.send(/*html*/`
-            <!DOCTYPE html>
-            <head>
-                <title>Home - PDF Automator</title>
-            </head>
-            <body>
-                <h1>
-                    PDF Automator
-                </h1>
-                <p>
-                    Hello ${request.user.name},
-                </p>
-                <p>
-                    Welcome to PDF Automator. To get started got to the <a href="/profile/dashboard">dashboard</a>.
-                    if you need to learn how this works, you can go to the <a href="/help">help page</a>. 
-                    To see your profile click <a href="/profile">here</a>.
-                </p>
-            </body>`
-        );
-    } else {
-        responds.send(/*html*/`
-            <!DOCTYPE html>
-            <head>
-                <title>Home - PDF Automator</title>
-            </head>
-            <body>
-                <h1>
-                    PDF Automator
-                </h1>
-                <p>
-                    Hello there!
-                </p>
-                <p>
-                    Welcome to PDF Automator. To get started, <a href="/auth/login">login with OAuth</a> first.
-                    If you need to learn how this works, you can go to the <a href="/help">help page</a>. 
-                </p>
-            </body>`
-        );
-    }
+router.get('/', handleNonHtmxRequestBySendingBaseDocument, (request, responds) => {
+    return ( responds
+        .status(StatusCodes.OK)
+        .type("text/html")
+        .send("this is the home page")
+    );
+});
+
+router.get("/session", (request, responds) => {
+    return ( responds
+        .status(StatusCodes.OK)
+        // .type("text/html")
+        .send({ user: { ...request.user}, session: { ...request.session } })
+    );
 });
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
