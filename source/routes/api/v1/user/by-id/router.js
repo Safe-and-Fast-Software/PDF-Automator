@@ -72,14 +72,14 @@ router.post("/:id", requiresAuthentication, async (request, responds) => {
     
     const isNotAnHtmxRequest = (request.headers["hx-request"] === undefined);
     const id = request.params.id;
-    const newUser = request.body;
+    const updatedUser = request.body;
     
     logInteraction(request);
 
     try {
         
         /* Validating JSON object to follow the custom schema */ {
-            if (! validate(newUser)) return ( request
+            if (! validate(updatedUser)) return ( request
                 .status(StatusCodes.BAD_REQUEST)
                 .type('application/json')
                 .send({ 
@@ -88,12 +88,8 @@ router.post("/:id", requiresAuthentication, async (request, responds) => {
                 })
             );
         }
-        
-        /* Updating the user */ {
-            const oldUser = await repository.fetch(id);
-            newUser.id = oldUser.id;
-            await repository.save(newUser);
-        }
+
+        await repository.save(id, updatedUser);
         
         /* Giving a JSON responds if it's not an HTMX request */ {
             if (isNotAnHtmxRequest) return ( responds

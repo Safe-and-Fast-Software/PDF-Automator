@@ -5,6 +5,7 @@ import passport from 'passport';
 import constants from '../../constants.js';
 import axios from 'axios';
 import getEnvironmentVariable from '../../environmentVariable.js';
+import { repository } from '../database/schemas/user.js';
 
 const url = new URL(getEnvironmentVariable("OAUTH_CONFIGURATION_URL"));
 const response = await axios.get(url);
@@ -20,8 +21,17 @@ const oAuth2Strategy = new OAuth2Strategy({
 
 passport.use(oAuth2Strategy);
 
-passport.serializeUser((user, done) => { done(null, user); });
-passport.deserializeUser((obj, done) => { done(null, obj); });
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
 
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await repository.fetch(id);
+        done(null, user);
+    } catch (error) {
+        done(error);
+    }
+});
 
 export default passport;

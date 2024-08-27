@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>PDF Automator</title>
+        <%# Meta Tags %>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="darkreader-lock">
+        <meta name="theme-color" content="">
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta property="og:site_name" content="PDF Automator">
+        <meta property="og:title" content="Automate creating PDFs using a GUI, or API.">
+        <meta property="og:description" content="With this free self hostable app you can automate the creation of PDFs using a GUI, or API. All for Free, forever. Check the GitHub page for more details.">
+        <meta property="og:image" content="/favicon.ico">
+        <%# Links %>
+        <!-- <link rel="stylesheet" href="style.css">  -->
+        <%# Scripts %>
+        <script src="https://unpkg.com/htmx.org@2.0.2" crossorigin="anonymous"
+            integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ">
+        </script>
+    </head>
+    <body style="min-height:100vh; margin:0; display:flex; flex-direction:column;">
+        <%- include('components/semantic/header', { user }) %>
+        <main style="flex: 1;" id="main" hx-get="<%= originalUrl %>" hx-trigger="revealed"> Main Content </main>
+        <%- include('components/semantic/footer') %>
+    </body>
+</html>

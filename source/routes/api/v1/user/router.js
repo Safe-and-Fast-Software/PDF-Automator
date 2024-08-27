@@ -22,7 +22,7 @@ router.use("/by-name", byNameRouter);
 //` GET
 
 router.get("/all", requiresAuthentication, async (request, responds) => {
-    const users = await userRepository.search().return.all();
+    const users = await repository.search().return.all();
     responds.send(users);
 });
 

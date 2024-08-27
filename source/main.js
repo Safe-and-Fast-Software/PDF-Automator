@@ -1,20 +1,11 @@
+"use-strict";
+
 import pdfmake from 'pdfmake';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import express, { response } from 'express';
+import express from 'express';
 const app = express();
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Request Logger ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-import requestLogger from './utilities/logging/requestLogger.js'
-app.use(requestLogger);
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Static directory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-import requiresAuthentication from './utilities/auth/require-authentication.js';
-app.use('/private', requiresAuthentication, express.static('private'));
-app.use(express.static("public"));
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Configuring Sessions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
 
@@ -40,10 +31,25 @@ import passport from './utilities/auth/passport.js';
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getting Request Params and Body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Request Logger ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+import requestLogger from './utilities/logging/requestLogger.js'
+app.use(requestLogger);
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Static directory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+import requiresAuthentication from './utilities/auth/require-authentication.js';
+app.use('/private', requiresAuthentication, express.static('private'));
+app.use(express.static("public"));
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getting Request Params and Body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Setting the Rendering Engine ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+app.set('view engine', 'ejs');
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
