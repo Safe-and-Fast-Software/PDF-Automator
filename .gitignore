@@ -1,6 +1,7 @@
 .vscode/
 data/
 sessions/
+**/tailwind.output.css
 
 # Logs
 logs

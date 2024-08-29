@@ -3,7 +3,7 @@ import client from '../client.js';
 import Ajv from 'ajv';
 
 const redisSchema = new Schema("customer", {
-    name:        { type: 'text', caseSensitive: false },
+    name:        { type: 'text', caseSensitive: false, textSearch: true, sortable: true },
     phone:       { type: 'text', caseSensitive: false },
     email:       { type: 'text', caseSensitive: false },
     street1:     { type: 'text', caseSensitive: false },

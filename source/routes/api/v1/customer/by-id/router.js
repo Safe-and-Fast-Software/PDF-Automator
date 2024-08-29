@@ -1,8 +1,9 @@
 "use-strict";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { repository, validate } from "../../../../../utilities/database/schemas/customer.js";
 import requiresAuthentication from "../../../../../utilities/auth/require-authentication.js";
+import { repository, validate } from "../../../../../utilities/database/schemas/customer.js";
+import customerCardComponent from "../customer-card.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -13,6 +14,14 @@ export const router = Router();
 
 function logInteraction(request) {
     console.debug(`[API-V1] ${request.method} request for customer with id: \"${request.params.id}\".`);
+}
+
+function serverMessageComponent(message) {
+    return (/*HTML*/`
+        <span class="transition-opacity duration-500 opacity-100">
+            ${message}
+        </span>
+    `);
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
@@ -39,8 +48,9 @@ router.get("/:id", requiresAuthentication, async (request, responds) => {
         }
             
         return ( responds
-            .status(StatusCodes.BAD_REQUEST)
-            .send(`${ReasonPhrases.BAD_REQUEST}: Not implemented as an HTMX endpoint yet.`)
+            .status(StatusCodes.OK)
+            .type("text/html")
+            .send(customerCardComponent(customer))
         );
 
 
@@ -61,7 +71,10 @@ router.get("/:id", requiresAuthentication, async (request, responds) => {
 
         return ( responds // HTMX responds
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .send(`${ReasonPhrases.INTERNAL_SERVER_ERROR}: an error occurred getting the customer.`)
+            .type("text/html")
+            .send(serverMessageComponent(
+                `${ReasonPhrases.INTERNAL_SERVER_ERROR}: an error occurred getting the customer.`
+            ))
         ); 
     }
 });
@@ -101,7 +114,8 @@ router.post("/:id", requiresAuthentication, async (request, responds) => {
         
         return ( responds
             .status(StatusCodes.OK)
-            .send(`Successfully updated customer!`)
+            .type("text/html")
+            .send(serverMessageComponent("Successfully updated customer!"))
         ); 
 
     } catch ( error ) {
@@ -121,7 +135,10 @@ router.post("/:id", requiresAuthentication, async (request, responds) => {
 
         return ( responds // HTMX responds
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .send(`${ReasonPhrases.INTERNAL_SERVER_ERROR}: an error occurred updating the customer.`)
+            .type("text/html")
+            .send(serverMessageComponent(
+                `${ReasonPhrases.INTERNAL_SERVER_ERROR}: an error occurred updating the customer.`
+            ))
         ); 
     }
 });
@@ -151,7 +168,8 @@ router.delete("/:id", requiresAuthentication, async (request, responds) => {
 
         return ( responds // HTMX responds
             .status(StatusCodes.OK)
-            .send(`${ReasonPhrases.OK}: Successfully deleted customer!`)
+            .type("text/html")
+            .send(serverMessageComponent(`${ReasonPhrases.OK}: Successfully deleted customer!`))
         ); 
 
     } catch ( error ) {
@@ -171,7 +189,10 @@ router.delete("/:id", requiresAuthentication, async (request, responds) => {
 
         return ( responds // HTMX responds
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
-            .send(`${ReasonPhrases.INTERNAL_SERVER_ERROR}: An error occurred deleting the customer.`)
+            .type("text/html")
+            .send(serverMessageComponent(
+                `${ReasonPhrases.INTERNAL_SERVER_ERROR}: An error occurred deleting the customer.`
+            ))
         ); 
     }
 });
