@@ -1,8 +1,9 @@
 "use-strict";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import handleNonHtmxRequestBySendingBaseDocument from "../utilities/responds/htmx/handle-non-htmx-request-by-sending-base-document.js";
 import constants from "../constants.js";
+import requiresAuthentication from "../utilities/auth/require-authentication.js";
+import loadBaseFirst from "../utilities/responds/load-base-first.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -11,30 +12,63 @@ export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { router as apiRouter} from "./api/router.js"
+import { router as apiRouter } from "./api/router.js";
 router.use("/api", apiRouter);
 
-import { router as authRouter} from "./auth/router.js";
+import { router as authRouter } from "./auth/router.js";
 router.use("/auth", authRouter);
 
-import { router as newRouter} from "./new/router.js"
-router.use("/new", newRouter);
+import { router as customerRouter } from "./customer/router.js";
+router.use("/customer", customerRouter);
 
-import { router as profileRouter} from "./profile/router.js"
-router.use("/profile", profileRouter);
-
-import { router as searchRouter} from "./search/router.js"
-router.use("/search", searchRouter);
+import { router as documentRouter } from "./document/router.js";
+router.use("/document", documentRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-router.get('/', handleNonHtmxRequestBySendingBaseDocument, (request, responds) => {
+router.get('/', loadBaseFirst, (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
         .type("text/html")
-        .render("pages/home", { sourceCodeURL: constants.github.link })
+        // .render("pages/home", { sourceCodeURL: constants.github.link })
+        .send(/*HTML*/`
+            <section id="summary">
+                <h1 class="mt-0">PDF Automator</h1>
+                <p>
+                    PDF Automator is an <a class="default" href="${constants.github.link}">open source</a>, and free 
+                    PDF creation software created, used, and maintained by <a class="default" 
+                    href="https://safs.nl">SAFS</a>. It's free to self host or you can of course ask us to host it
+                    for you by <a class="default" href="https://redirects.safs.nl/contact">reaching out</a>.
+                </p>
+            </section>
+            <div class="md:grid grid-cols-3 gap-3 mt-3">
+                <section id="what-is-it-for" class="border border-gray-300 rounded-lg p-3">
+                    <h2 class="mt-0 text-center">What is it for?</h2>
+                    <p>
+                        PDF Automator is used for creating PDFs with your logo, contact information, and that of your 
+                        customers, all automagically. All you have to do is sent a request to the API endpoint, or use
+                        the web GUI to create it.
+                    </p>
+                </section>
+                <section id="who-is-it-for" class="border border-gray-300 rounded-lg p-3">
+                    <h2 class="mt-0 text-center">Who is it for?</h2>
+                    <p>
+                        PDF Automator is for small business, who don't want to pay for invoice, contracting software. 
+                        That's why I created this. (Also because it seemed like a fun summer project to make.)
+                    </p>
+                </section>
+                <section id="want-to-see-more" class="border border-gray-300 rounded-lg p-3">
+                    <h2 class="mt-0 text-center">Want to see more?</h2>
+                    <p>
+                        There is are some pictures of the program as well as instructions on how to host it yourself
+                        included in the <a class="default" href="${constants.github.link}">repository</a>, all for 
+                        free.
+                    </p>
+                </section>
+            </div>
+        `)
     );
-});
+}); 
 
 router.get("/session", (request, responds) => {
     return ( responds
@@ -47,7 +81,26 @@ router.get("/session", (request, responds) => {
 router.get("/health-check", (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
+        .type("text/html")
         .send(ReasonPhrases.OK)
+    );
+});
+
+import profilePage, { profileFormComponent } from "./profile-page.js";
+router.get('/profile', requiresAuthentication, loadBaseFirst, (request, responds) => {
+    return ( responds
+        .status(StatusCodes.OK)
+        .type("text/html")
+        .send(profilePage(request))
+    );
+});
+
+import htmxOnlyEndpoint from "../utilities/responds/htmx-only-endpoint.js";
+router.get('/profile/htmx/form', htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {     
+    return ( responds
+        .status(StatusCodes.OK)
+        .type("text/html")
+        .send(profileFormComponent(request))
     );
 });
 

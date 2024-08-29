@@ -4,6 +4,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { repository, validate } from "../../../../utilities/database/schemas/customer.js"
 import requiresAuthentication from "../../../../utilities/auth/require-authentication.js";
 import { EntityId } from "redis-om";
+import customerCardComponent from "./customer-card.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -53,26 +54,7 @@ router.get("/all", requiresAuthentication, async (request, responds) => {
         }
 
         return ( /* HTMX */ responds.status(StatusCodes.OK)
-            .send(customers.map( (customer) => /*HTML*/`
-
-                <li id="customer-${customer[EntityId]}">
-                    <p>
-                        <b>Customer ID</b>: ${customer[EntityId]}<br>
-                        <b>Name</b>: ${customer.name}<br>
-                        <b>Email</b>: ${customer.email}<br>
-                        <b>Phone Number</b>: ${customer.phone}<br>
-                        <b>Street 1</b>: ${customer.street1}<br>
-                        <b>Street 2</b>: ${customer.street2}<br>
-                        <b>city</b>: ${customer.city}<br>
-                        <b>zip code</b>: ${customer.zip}<br>
-                        <b>country</b>: ${customer.country}<br>
-                    </p>
-                    <button hx-delete="/api/v1/customer/by-id/${customer[EntityId]}" hx-trigger="click"
-                        hx-target="#customer-${customer[EntityId]}" hx-swap="delete"
-                        hx-on:click="console.log('delete user: ${customer[EntityId]}.')">
-                        Delete Customer
-                    </button>
-                </li>`
+            .send(customers.map( (customer) => customerCardComponent(customer)
 
             ).join(""))
         );
@@ -137,25 +119,8 @@ router.put("/", requiresAuthentication, async (request, responds) => {
         
         return ( responds
             .status(StatusCodes.OK)
-            .send(/*HTML*/`
-                <li id="customer-${instance[EntityId]}">
-                    <p>
-                        <b>Customer ID</b>: ${instance[EntityId]}<br>
-                        <b>Name</b>: ${instance.name}<br>
-                        <b>Email</b>: ${instance.email}<br>
-                        <b>Phone Number</b>: ${instance.phone}<br>
-                        <b>Street 1</b>: ${instance.street1}<br>
-                        <b>Street 2</b>: ${instance.street2}<br>
-                        <b>city</b>: ${instance.city}<br>
-                        <b>zip code</b>: ${instance.zip}<br>
-                        <b>country</b>: ${instance.country}<br>
-                    </p>
-                    <button hx-delete="/api/v1/customer/by-id/${instance[EntityId]}" hx-trigger="click"
-                        hx-target="#customer-${instance[EntityId]}" hx-swap="delete">
-                        Delete Customer
-                    </button>
-                </li>`
-            )
+            .type("text/html")
+            .send(customerCardComponent(instance))
         ); 
 
     } catch ( error ) {

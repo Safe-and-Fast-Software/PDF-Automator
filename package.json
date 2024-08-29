@@ -1,63 +1,67 @@
 {
-  "name": "pdf-creater",
-  "description": "Creates PDFs from JSON",
-  "author": "SAFS",
-  "version": "1.0.0",
-  "type": "module",
-  "main": "source/main.js",
-  "scripts": {
-    "start": "node source/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --verbose --exec 'npm run build:css && npm run start'",
-    "build:css": "postcss public/styles/tailwind.input.css -o public/styles/tailwind.output.css"
-  },
-  "keywords": [
-    "PDF",
-    "JSON"
-  ],
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/Safe-and-Fast-Software/PDF-Creater/issues"
-  },
-  "private": true,
-  "homepage": "https://github.com/Safe-and-Fast-Software/PDF-Creater#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Safe-and-Fast-Software/PDF-Creater.git"
-  },
-  "dependencies": {
-    "-": "^0.0.1",
-    "ajv": "^8.17.1",
-    "autoprefixer": "^10.4.20",
-    "axios": "^1.7.4",
-    "connect-redis": "^7.1.1",
-    "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "http-status-codes": "^2.3.0",
-    "passport": "^0.7.0",
-    "passport-oauth2": "^1.8.0",
-    "pdfmake": "^0.2.11",
-    "postcss": "^8.4.41",
-    "redis": "^4.7.0",
-    "redis-om": "^0.4.6",
-    "session-file-store": "^1.5.0"
-  },
-  "devDependencies": {
-    "depcheck": "^1.4.7",
-    "nodemon": "^3.1.4",
-    "tailwindcss": "^3.4.10"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.log",
-      "**/*.md",
-      "**/*.nix",
-      "**/.vscode/*",
-      "**/*.http",
-      "pubic/**/*",
-      "!public/styles/tailwind.input.css"
-    ]
-  }
+    "name": "pdf-creater",
+    "description": "Creates PDFs from JSON",
+    "author": "SAFS",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "source/main.js",
+    "scripts": {
+        "start": "node source/main.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon --exec 'npm run build:css && npm run start'",
+        "build:css": "postcss tailwind.input.css -o public/styles/tailwind.output.css"
+    },
+    "keywords": [
+        "PDF",
+        "JSON"
+    ],
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/Safe-and-Fast-Software/PDF-Creater/issues"
+    },
+    "private": true,
+    "homepage": "https://github.com/Safe-and-Fast-Software/PDF-Creater#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Safe-and-Fast-Software/PDF-Creater.git"
+    },
+    "dependencies": {
+        "-": "^0.0.1",
+        "ajv": "^8.17.1",
+        "autoprefixer": "^10.4.20",
+        "axios": "^1.7.4",
+        "connect-redis": "^7.1.1",
+        "dotenv": "^16.4.5",
+        "ejs": "^3.1.10",
+        "express": "^4.19.2",
+        "express-session": "^1.18.0",
+        "http-status-codes": "^2.3.0",
+        "passport": "^0.7.0",
+        "passport-oauth2": "^1.8.0",
+        "pdfmake": "^0.2.11",
+        "postcss": "^8.4.41",
+        "redis": "^4.7.0",
+        "redis-om": "^0.4.6",
+        "session-file-store": "^1.5.0"
+    },
+    "devDependencies": {
+        "cssnano": "^7.0.5",
+        "depcheck": "^1.4.7",
+        "nodemon": "^3.1.4",
+        "tailwindcss": "^3.4.10"
+    },
+    "nodemonConfig": {
+        "verbose": true,
+        "watch": [
+            "**/*.*"
+        ],
+        "ignore": [
+            "**/*.log",
+            "**/*.md",
+            "**/*.nix",
+            "**/.vscode/*",
+            "**/*.http",
+            "pubic/**/*"
+        ]
+    }
 }
