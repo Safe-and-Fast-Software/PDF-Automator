@@ -26,13 +26,15 @@ router.use("/document", documentRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-router.get('/', loadBaseFirst, (request, responds) => {
+import { repository as userRepository } from "../utilities/database/schemas/user.js";
+import { repository as customerRepository } from "../utilities/database/schemas/customer.js";
+router.get('/', loadBaseFirst, async (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
         .type("text/html")
         // .render("pages/home", { sourceCodeURL: constants.github.link })
         .send(/*HTML*/`
-            <section id="summary">
+            <section id="summary" class="border border-gray-300 rounded-lg p-3">
                 <h1 class="mt-0">PDF Automator</h1>
                 <p>
                     PDF Automator is an <a class="default" href="${constants.github.link}">open source</a>, and free 
@@ -41,7 +43,7 @@ router.get('/', loadBaseFirst, (request, responds) => {
                     for you by <a class="default" href="https://redirects.safs.nl/contact">reaching out</a>.
                 </p>
             </section>
-            <div class="md:grid grid-cols-3 gap-3 mt-3">
+            <div class="md:grid grid-cols-3 gap-4 mt-4">
                 <section id="what-is-it-for" class="border border-gray-300 rounded-lg p-3">
                     <h2 class="mt-0 text-center">What is it for?</h2>
                     <p>
@@ -66,6 +68,38 @@ router.get('/', loadBaseFirst, (request, responds) => {
                     </p>
                 </section>
             </div>
+            <section id="fun-facts" class="border border-gray-300 rounded-lg p-3 mt-4">
+                <h3 class="mt-0">Fun Facts</h3>
+                <p>
+                    Here are some metrics of the application:
+                </p>
+                <table class="mt-3">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Emails sent</td>
+                            <td><!-- TODO : implement --></td>
+                        </tr>
+                        <tr>
+                            <td>Users in database</td>
+                            <td>${(await userRepository.search().return.count())}</td>
+                        </tr>
+                        <tr>
+                            <td>Customers in database</td>
+                            <td>${(await customerRepository.search().return.count())}</td>
+                        </tr>
+                        <tr>
+                            <td>Documents in database</td>
+                            <td>${/*(await customerRepository.search().return.count())*/""}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         `)
     );
 }); 
