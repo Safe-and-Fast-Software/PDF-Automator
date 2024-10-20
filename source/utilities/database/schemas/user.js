@@ -1,5 +1,5 @@
 import { Schema, Repository } from 'redis-om';
-import client from '../client.js';
+import client from '#source/utilities/database/client.js';
 import Ajv from 'ajv';
 
 const redisSchema = new Schema("user", {

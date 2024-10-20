@@ -1,12 +1,12 @@
 import axios from 'axios';
-import constants from '../../constants.js';
-import { oAuthConfiguration } from './passport.js';
+import constants from '#source/constants.js';
+import { oAuthConfiguration } from '#source/utilities/auth/passport.js';
 
-import LoginError from './errors/login-error.js';
-import MissingInformationLoginError from './errors/missing-information-error.js';
-import NotPartOfAuthorizedGroupError from './errors/not-part-of-authorized-group-error.js';
+import LoginError from '#source/utilities/auth/errors/login-error.js';
+import MissingInformationLoginError from '#source/utilities/auth/errors/missing-information-error.js';
+import NotPartOfAuthorizedGroupError from '#source/utilities/auth/errors/not-part-of-authorized-group-error.js';
 
-import { repository as userRepository } from "../database/schemas/user.js";
+import { repository as userRepository } from "#source/utilities/database/schemas/user.js";
 import { EntityId } from 'redis-om';
 
 /** Fetches the user's information from the user info end point or throws an error if that fails. */
@@ -48,7 +48,7 @@ async function initializeUserWithDataBase(user) {
 export default async function handleLogin(accessToken, refreshToken, profile, done) {
 
     try {
-               
+        
         const userProfile = await getUserData(accessToken);
         const user = await initializeUserWithDataBase(userProfile);
 

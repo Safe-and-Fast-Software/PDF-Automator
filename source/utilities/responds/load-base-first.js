@@ -80,7 +80,8 @@ export function footerComponent(request) {
     );
 }
 
-import navigationBarComponent from "./components/navigation/bar.js";
+import navigationBarComponent from "#source/utilities/responds/components/navigation/bar.js";
+
 export function headerComponent(request) {
     return (/*HTML*/`
         <header class="sticky top-0 z-50 bg-black">

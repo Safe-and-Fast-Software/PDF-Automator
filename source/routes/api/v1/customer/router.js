@@ -1,10 +1,9 @@
 "use-strict";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { repository, validate } from "../../../../utilities/database/schemas/customer.js"
-import requiresAuthentication from "../../../../utilities/auth/require-authentication.js";
-import { EntityId } from "redis-om";
-import customerCardComponent from "./customer-card.js";
+import { repository, validate } from "#source/utilities/database/schemas/customer.js"
+import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
+import customerCardComponent from "#source/routes/api/v1/customer/customer-card.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -13,10 +12,10 @@ export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { router as byIdRouter } from "./by-id/router.js"
+import { router as byIdRouter } from "#source/routes/api/v1/customer/by-id/router.js"
 router.use("/by-id", byIdRouter);
 
-import { router as byNameRouter } from "./by-name/router.js"
+import { router as byNameRouter } from "#source/routes/api/v1/customer/by-name/router.js"
 router.use("/by-name", byNameRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

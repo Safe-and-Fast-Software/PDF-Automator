@@ -1,9 +1,9 @@
 "use-strict";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import requiresAuthentication from "../../../../../utilities/auth/require-authentication.js";
-import { repository, validate } from "../../../../../utilities/database/schemas/customer.js";
-import customerCardComponent from "../customer-card.js";
+import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
+import { repository, validate } from "#source/utilities/database/schemas/customer.js";
+import customerCardComponent from "#source/routes/api/v1/customer/customer-card.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 

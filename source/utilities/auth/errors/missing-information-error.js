@@ -1,4 +1,4 @@
-import LoginError from "./login-error.js";
+import LoginError from "#source/utilities/auth/errors/login-error.js";
 import { StatusCodes } from "http-status-codes";
 
 /** For when there's missing information. */

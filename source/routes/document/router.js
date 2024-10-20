@@ -1,9 +1,8 @@
 "use-strict";
 
 import { StatusCodes } from "http-status-codes";
-import requiresAuthentication from "../../utilities/auth/require-authentication.js";
-import loadBaseFirst from "../../utilities/responds/load-base-first.js";
-
+import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
+import loadBaseFirst from "#source/utilities/responds/load-base-first.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -56,9 +55,9 @@ router.get("/", requiresAuthentication, loadBaseFirst, (request, responds) => {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  HTMX end Points  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import htmxOnlyEndpoint from "../../utilities/responds/htmx-only-endpoint.js";
+import htmxOnlyEndpoint from "#source/utilities/responds/htmx-only-endpoint.js";
 
-router.get("/htmx/search-document", requiresAuthentication, (request, responds) => {
+router.get("/htmx/search-document", htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
         .type("text/html")
@@ -71,7 +70,7 @@ router.get("/htmx/search-document", requiresAuthentication, (request, responds) 
     );
 });
 
-router.get("/htmx/create-new-document", requiresAuthentication, (request, responds) => {
+router.get("/htmx/create-new-document", htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
         .type("text/html")

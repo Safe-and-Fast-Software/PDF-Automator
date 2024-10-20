@@ -2,8 +2,8 @@
 "use-strict";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { repository } from "../../../../../utilities/database/schemas/user.js";
-import requiresAuthentication from "../../../../../utilities/auth/require-authentication.js";
+import { repository } from "#source/utilities/database/schemas/user.js";
+import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 

@@ -1,5 +1,4 @@
-import linkComponent from "./link.js";
-
+import linkComponent from "#source/utilities/responds/components/navigation/link.js";
 const icons = {
     home : (/*HTML*/`
         <svg class="inline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">

@@ -1,7 +1,7 @@
 "use-strict";
 
 import { StatusCodes } from 'http-status-codes';
-import passport from '../../utilities/auth/passport.js';
+import passport from '#source/utilities/auth/passport.js';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 

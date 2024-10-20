@@ -1,6 +1,6 @@
 "use-strict";
 
-import constants from "../../../constants.js";
+import constants from "#source/constants.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -9,10 +9,10 @@ export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { router as customerRouter } from "./customer/router.js";
+import { router as customerRouter } from "#source/routes/api/v1/customer/router.js";
 router.use("/customer", customerRouter);
 
-import { router as userRouter } from "./user/router.js"
+import { router as userRouter } from "#source/routes/api/v1/user/router.js"
 router.use("/user", userRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

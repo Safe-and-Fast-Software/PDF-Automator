@@ -11,10 +11,10 @@ export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { router as byIdRouter } from "./by-id/router.js"
+import { router as byIdRouter } from "#source/routes/api/v1/user/by-id/router.js"
 router.use("/by-id", byIdRouter);
 
-import { router as byNameRouter } from "./by-name/router.js"
+import { router as byNameRouter } from "#source/routes/api/v1/user/by-name/router.js"
 router.use("/by-name", byNameRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

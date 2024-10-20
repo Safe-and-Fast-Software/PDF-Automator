@@ -1,5 +1,5 @@
 import dotenv from 'dotenv/config';
-import getEnvironmentVariable from './environmentVariable.js';
+import getEnvironmentVariable from '#source/environmentVariable.js';
 
 const constants = {
     github : { link : "https://github.com/Safe-and-Fast-Software/PDF-Automator" },

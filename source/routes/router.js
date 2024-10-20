@@ -1,9 +1,9 @@
 "use-strict";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import constants from "../constants.js";
-import requiresAuthentication from "../utilities/auth/require-authentication.js";
-import loadBaseFirst from "../utilities/responds/load-base-first.js";
+import constants from "#source/constants.js";
+import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
+import loadBaseFirst from "#source/utilities/responds/load-base-first.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -12,22 +12,22 @@ export const router = Router();
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { router as apiRouter } from "./api/router.js";
+import { router as apiRouter } from "#source/routes/api/router.js";
 router.use("/api", apiRouter);
 
-import { router as authRouter } from "./auth/router.js";
+import { router as authRouter } from "#source/routes/auth/router.js";
 router.use("/auth", authRouter);
 
-import { router as customerRouter } from "./customer/router.js";
+import { router as customerRouter } from "#source/routes/customer/router.js";
 router.use("/customer", customerRouter);
 
-import { router as documentRouter } from "./document/router.js";
+import { router as documentRouter } from "#source/routes/document/router.js";
 router.use("/document", documentRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { repository as userRepository } from "../utilities/database/schemas/user.js";
-import { repository as customerRepository } from "../utilities/database/schemas/customer.js";
+import { repository as userRepository } from "#source/utilities/database/schemas/user.js";
+import { repository as customerRepository } from "#source/utilities/database/schemas/customer.js";
 router.get('/', loadBaseFirst, async (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
@@ -120,7 +120,7 @@ router.get("/health-check", (request, responds) => {
     );
 });
 
-import profilePage, { profileFormComponent } from "./profile-page.js";
+import profilePage, { profileFormComponent } from "#source/routes/profile-page.js";
 router.get('/profile', requiresAuthentication, loadBaseFirst, (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
@@ -129,7 +129,7 @@ router.get('/profile', requiresAuthentication, loadBaseFirst, (request, responds
     );
 });
 
-import htmxOnlyEndpoint from "../utilities/responds/htmx-only-endpoint.js";
+import htmxOnlyEndpoint from "#source/utilities/responds/htmx-only-endpoint.js";
 router.get('/profile/htmx/form', htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {     
     return ( responds
         .status(StatusCodes.OK)

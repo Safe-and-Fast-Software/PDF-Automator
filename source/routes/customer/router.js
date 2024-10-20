@@ -1,12 +1,12 @@
 "use-strict";
 
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import requiresAuthentication from "../../utilities/auth/require-authentication.js";
-import loadBaseFirst from "../../utilities/responds/load-base-first.js";
+import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
+import loadBaseFirst from "#source/utilities/responds/load-base-first.js";
 
-import simpleCustomerSearch from "./simple-customer-search.js"
-import createCustomerComponent from "./create-customer.js"
-import advancedCustomerSearchComponent from "./advanced-customer-search.js"
+import simpleCustomerSearch from "#source/routes/customer/simple-customer-search.js";
+import createCustomerComponent from "#source/routes/customer/create-customer.js";
+import advancedCustomerSearchComponent from "#source/routes/customer/advanced-customer-search.js";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 

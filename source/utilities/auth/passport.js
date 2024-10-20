@@ -1,11 +1,11 @@
 
 import { Strategy as OAuth2Strategy } from 'passport-oauth2';
-import handleLogin from './handle-login.js';
+import handleLogin from '#source/utilities/auth/handle-login.js';
 import passport from 'passport';
-import constants from '../../constants.js';
+import constants from '#source/constants.js';
 import axios from 'axios';
-import getEnvironmentVariable from '../../environmentVariable.js';
-import { repository } from '../database/schemas/user.js';
+import getEnvironmentVariable from '#source/environmentVariable.js';
+import { repository } from '#source/utilities/database/schemas/user.js';
 
 const url = new URL(getEnvironmentVariable("OAUTH_CONFIGURATION_URL"));
 const response = await axios.get(url);
