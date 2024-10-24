@@ -3,6 +3,8 @@
  */
 function requestLogger(request, responds, next) {
 
+    if (request.originalUrl === "/health-check") return next();
+
     const currentTime = new Date().toUTCString();
     const ip = (request.headers['x-forwarded-for'] || request.socket.remoteAddress);
     const name = (request.user&&request.user.name?`${request.user.name}`:"an unknown user");
@@ -12,7 +14,6 @@ function requestLogger(request, responds, next) {
     );
     
     if (request.body !== undefined) console.debug('Request body:', request.body);
-    // console.debug('Request headers:', request.headers);
 
     return next();
 }
