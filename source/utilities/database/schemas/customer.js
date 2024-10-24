@@ -1,8 +1,10 @@
+"use-strict";
+
 import { Schema, Repository } from 'redis-om';
 import client from '#source/utilities/database/client.js';
 import Ajv from 'ajv';
 
-const redisSchema = new Schema("customer", {
+export const redisSchema = Object.freeze({
     name:        { type: 'text', caseSensitive: false, textSearch: true, sortable: true },
     phone:       { type: 'text', caseSensitive: false },
     email:       { type: 'text', caseSensitive: false },
@@ -11,7 +13,7 @@ const redisSchema = new Schema("customer", {
     city:        { type: 'text', caseSensitive: false },
     zip:         { type: 'text', caseSensitive: false },
     country:     { type: 'text', caseSensitive: false },
-}, { dataStructure: 'JSON' });
+});
 
 /** The JSON schema that every Customer should be in. */
 export const jsonSchema = Object.freeze({
@@ -36,6 +38,6 @@ const ajv = new Ajv();
 export const validate = (ajv.compile(jsonSchema));
 
 /** The repository in which all customers will be stored. */
-export const repository = new Repository(redisSchema, client);
+export const repository = new Repository( new Schema("customer", redisSchema, { dataStructure: 'JSON' }), client);
 
 await repository.createIndex();

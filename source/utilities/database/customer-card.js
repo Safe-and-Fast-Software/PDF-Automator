@@ -23,7 +23,7 @@ export default function customerCardComponent(customer) {
                         <h4 class="default text-right">Customer identity</h4><div></div>
                         <!-- ID -->
                         <label class="default" for="customer-id">Customer ID:</label>
-                        <input class="default cursor-not-allowed" id="customer-id" value="${customer[EntityId]}" disabled>
+                        <input class="default cursor-not-allowed" id="customer-id-${customer[EntityId]}" value="${customer[EntityId]}" disabled>
                         <!-- Name -->
                         <label class="default" for="customer-name">Name:</label>
                         <input class="default" id="customer-name" name="name" type="text" value="${customer?.name}" required>
