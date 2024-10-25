@@ -26,8 +26,7 @@ router.use("/document", documentRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { repository as userRepository } from "#source/utilities/database/schemas/user.js";
-import { repository as customerRepository } from "#source/utilities/database/schemas/customer.js";
+import { repository } from "#source/utilities/database/schemas/all.js";
 router.get('/', loadBaseFirst, async (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
@@ -77,25 +76,29 @@ router.get('/', loadBaseFirst, async (request, responds) => {
                     <thead>
                         <tr>
                             <th>Category</th>
-                            <th>amount</th>
+                            <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Emails sent</td>
-                            <td><!-- TODO : implement --></td>
+                            <td>TODO<!-- TODO : implement --></td>
                         </tr>
                         <tr>
                             <td>Users in database</td>
-                            <td>${(await userRepository.search().return.count())}</td>
+                            <td>${(await repository?.user?.search()?.return?.count())}</td>
                         </tr>
                         <tr>
                             <td>Customers in database</td>
-                            <td>${(await customerRepository.search().return.count())}</td>
+                            <td>${(await repository?.customer?.search()?.return?.count())}</td>
                         </tr>
                         <tr>
                             <td>Documents in database</td>
-                            <td>${/*(await customerRepository.search().return.count())*/""}</td>
+                            <td>${(await repository?.document?.search()?.return?.count())}</td>
+                        </tr>
+                        <tr>
+                            <td>Document Templates in database</td>
+                            <td>${(await repository?.template?.search()?.return?.count())}</td>
                         </tr>
                     </tbody>
                 </table>
