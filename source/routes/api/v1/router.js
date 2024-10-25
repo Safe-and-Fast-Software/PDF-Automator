@@ -1,10 +1,20 @@
 "use-strict";
 
+import path from 'path';
+
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
-import { EntityId } from "redis-om";
 
+import { EntityId } from "redis-om";
 import { repository, validate, jsonSchema, redisSchema, convert } from "#source/utilities/database/schemas/all.js";
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+import pdfMake  from "pdfmake/build/pdfmake.js";
+import pdfFonts from "pdfmake/build/vfs_fonts.js";
+import pdfMakePrinter from "pdfmake/src/printer.js";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -27,6 +37,34 @@ async function ensureValidType(request, responds, next) {
 
     return next();
 }
+
+/** Creates a PDF with a document definition, and then returns this in the callback */
+function createPdfBinary(pdfDoc, callback) {
+
+  const fonts = {
+    Roboto: {
+        normal:       '/app/public/fonts/roboto-regular.ttf',
+        bold:         '/app/public/fonts/roboto-bold.ttf',
+        italics:      '/app/public/fonts/roboto-italic.ttf',
+        bolditalics:  '/app/public/fonts/roboto-bold-italic.ttf',
+    },
+};
+  const printer = new pdfMakePrinter(fonts);
+  const document = printer.createPdfKitDocument(pdfDoc);
+  const chunks = [];
+  
+  let result;
+
+  document.on('data', function (chunk) {
+    chunks.push(chunk);
+  });
+  document.on('end', function () {
+    result = Buffer.concat(chunks);
+    callback('data:application/pdf;base64,' + result.toString('base64'));
+  });
+  document.end();
+}
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 router.get("/", (request, responds) => {
@@ -177,7 +215,7 @@ router.get("/:type/all", requiresAuthentication, ensureValidType, async (request
 
         let searchQuery = repository[type].search();
         /* Narrowing the search if a query was provided. */ {
-          for (const [key, value] of Object.entries(request.query)) {
+            for (const [key, value] of Object.entries(request.query)) {
 
                 /* Skipping special keys, or empty values. */ {
                     if ( !value || value === "") continue;
@@ -227,12 +265,98 @@ router.get("/:type/all", requiresAuthentication, ensureValidType, async (request
 
     } catch (error) { console.error(error);
         
-        // TODO add a regex that checks if the error was because of a non existent field in the database.
-        // if this is true, return a BAD_REQUEST responds saying the field was illegal.
-
         const errorResponds = { 
             status: StatusCodes.INTERNAL_SERVER_ERROR, 
             error: `${ReasonPhrases.INTERNAL_SERVER_ERROR}: could not fetch ${type}, an unknown error occurred.`,
+        };
+
+        /* Giving a JSON error responds if it's not an HTMX request */ {
+            if (isNotAnHtmxRequest) return ( responds
+                .status(errorResponds.status)
+                .type('application/json')
+                .send(errorResponds)
+            );
+        }
+
+        /* Giving an HTML error responds in all other cases. */ {
+            return ( responds
+                .status(errorResponds.status)
+                .type('text/html')
+                .send(errorResponds.error)
+            ); 
+        }
+    }
+});
+
+router.get("/template/preview/", requiresAuthentication, async (request, responds) => {
+    const isNotAnHtmxRequest = (request.headers["hx-request"] === undefined);
+    try {
+
+        let requestQueryJSON = undefined;
+        /* Trying to see if the JSON parameter is valid. */ {
+            try { 
+                
+                if (request?.query.json) requestQueryJSON = JSON.parse(request.query.json);
+                else if (request?.body.json) requestQueryJSON = JSON.parse(request.body.json);
+                else requestQueryJSON = JSON.parse(request.body);
+
+            } catch ( error ) { console.error(error);
+                
+                const errorResponds = { 
+                    status: StatusCodes.BAD_REQUEST, 
+                    error: `${ReasonPhrases.BAD_REQUEST}: the JSON is not valid.`,
+                };
+
+                /* Giving a JSON error responds if it's not an HTMX request */ {
+                    if (isNotAnHtmxRequest) return ( responds
+                        .status(errorResponds.status)
+                        .type('application/json')
+                        .send(errorResponds)
+                    );
+                }
+
+                /* Giving an HTML error responds in all other cases. */ {
+                    return ( responds
+                        .status(errorResponds.status)
+                        .type('text/html')
+                        .send(errorResponds.error)
+                    ); 
+                }
+            }
+        }
+
+        const documentDefinition = {
+            content: requestQueryJSON,
+        };
+
+        const fonts = {
+            Roboto: {
+                normal:       '/app/public/fonts/roboto-regular.ttf',
+                bold:         '/app/public/fonts/roboto-bold.ttf',
+                italics:      '/app/public/fonts/roboto-italic.ttf',
+                bolditalics:  '/app/public/fonts/roboto-bold-italic.ttf',
+            },
+        };
+
+        const printer = new pdfMakePrinter(fonts);
+        const document = printer.createPdfKitDocument(documentDefinition);
+        const stream = responds.writeHead(StatusCodes.OK, {
+            'Content-Type': 'application/pdf,',
+            'Content-Disposition': `inline; filename="${request?.query.name}.pdf"`
+        });
+
+        /* Building the document, and sending it when it's done. */ {
+            document.on('data', (chunk) => stream.write(chunk) );
+            document.on('end',  (     ) => stream.end()        );
+            document.end();
+        }
+
+
+    } catch ( error ) { console.error(error);
+        
+        const errorResponds = { 
+            status: StatusCodes.INTERNAL_SERVER_ERROR, 
+            error: `${ReasonPhrases.INTERNAL_SERVER_ERROR}: could not create preview.`,
         };
 
         /* Giving a JSON error responds if it's not an HTMX request */ {

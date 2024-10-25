@@ -22,36 +22,36 @@ export default function customerCardComponent(customer) {
                         <!--  -->
                         <h4 class="default text-right">Customer identity</h4><div></div>
                         <!-- ID -->
-                        <label class="default" for="customer-id">Customer ID:</label>
-                        <input class="default cursor-not-allowed" id="customer-id-${customer[EntityId]}" value="${customer[EntityId]}" disabled>
+                        <label for="${cardID}-id" class="default">Customer ID:</label>
+                        <input  id="${cardID}-id" class="default cursor-not-allowed" value="${customer[EntityId]}" disabled>
                         <!-- Name -->
-                        <label class="default" for="customer-name">Name:</label>
-                        <input class="default" id="customer-name" name="name" type="text" value="${customer?.name}" required>
+                        <label for="${cardID}-name"    class="default">Name:</label>
+                        <input  id="${cardID}-name"    class="default" type="text" name="name" value="${customer?.name}" required>
                         <!--  -->
                         <h4 class="default text-right">Contact information</h4><div></div>
                         <!-- Phone Number -->
-                        <label class="default" for="customer-phone-number">phone number:</label>
-                        <input class="default"  id="customer-phone-number" type="text" name="phone" value="${customer?.phone}" required>
+                        <label for="${cardID}-phone"   class="default">phone number:</label>
+                        <input  id="${cardID}-phone"   class="default" type="text" name="phone"   value="${customer?.phone}" required>
                         <!-- Email -->
-                        <label class="default" for="customer-email">email:</label>
-                        <input class="default"  id="customer-email" type="text" name="email" value="${customer?.email}" required>
+                        <label for="${cardID}-email"   class="default">email:</label>
+                        <input  id="${cardID}-email"   class="default" type="text" name="email"   value="${customer?.email}" required>
                         <!--  -->
                         <h4 class="default text-right">Address information</h4><div></div>
                         <!-- Street (primary) -->
-                        <label class="default" for="customer-street1">Street 1:</label>
-                        <input class="default" type="text" id="customer-street1" name="street1" value="${customer?.street1}" required>
+                        <label for="${cardID}-street1" class="default">Street 1:</label>
+                        <input  id="${cardID}-street1" class="default" type="text" name="street1" value="${customer?.street1}" required>
                         <!-- Street (secondary) -->
-                        <label class="default" for="customer-street2">Street 2:</label>
-                        <input class="default" id="customer-street2" type="text" name="street2" value="${customer?.street2}" >
+                        <label for="${cardID}-street2" class="default">Street 2:</label>
+                        <input  id="${cardID}-street2" class="default" type="text" name="street2" value="${customer?.street2}" >
                         <!-- City -->
-                        <label class="default" for="customer-city">city:</label>
-                        <input class="default" id="customer-city" type="text" name="city" value="${customer?.city}" required>
+                        <label for="${cardID}-city"    class="default">city:</label>
+                        <input  id="${cardID}-city"    class="default" type="text" name="city"    value="${customer?.city}" required>
                         <!-- Zip Code -->
-                        <label class="default" for="customer-zip">zip code:</label>
-                        <input class="default" id="customer-zip" type="text" name="zip" value="${customer?.zip}" required>
+                        <label for="${cardID}-zip"     class="default">zip code:</label>
+                        <input  id="${cardID}-zip"     class="default" type="text" name="zip"     value="${customer?.zip}" required>
                         <!-- Country -->
-                        <label class="default" for="customer-country">country:</label>
-                        <input class="default" id="customer-country" type="text" name="country" value="${customer?.country}" required>
+                        <label for="${cardID}-country" class="default">country:</label>
+                        <input  id="${cardID}-country" class="default" type="text" name="country" value="${customer?.country}" required>
                     </div>
                     <div id="${customerUpdateRespondsID}" class="m-4 font-semibold"></div>
                 </div>

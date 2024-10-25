@@ -50,10 +50,11 @@ export const redisSchema = Object.freeze({
 });
 
 //` Convert to HTML for different types.
-import customerCardComponent from "#source/utilities/database/customer-card.js";
+import customerCardComponent from "#source/utilities/responds/components/cards/customer-card.js";
+import documentCardComponent from "#source/utilities/responds/components/cards/document-card.js";
 export const convert = Object.freeze({
     "template": { toHTML: instance => `${instance}` },
-    "document": { toHTML: instance => `${instance}` },
+    "document": { toHTML: instance => documentCardComponent(instance) },
     "customer": { toHTML: instance => customerCardComponent(instance) },
     "user":     { toHTML: instance => `${instance}` },
 });
