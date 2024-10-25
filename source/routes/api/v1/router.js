@@ -260,10 +260,10 @@ router.get("/:type/by-id/:id", requiresAuthentication, ensureValidType, async (r
 
     try {
 
-        const searchResults = await repository[type].fetch(id);
+        const searchResult = await repository[type].fetch(id);
         
         /* Returning a 404 if no entry with that ID exists. */ {
-            if ( Object.keys(searchResults).length === 0 ) {
+            if ( Object.keys(searchResult).length === 0 ) {
                 
                 const errorResponds = {
                     status: StatusCodes.NOT_FOUND,
@@ -286,7 +286,7 @@ router.get("/:type/by-id/:id", requiresAuthentication, ensureValidType, async (r
             if (isNotAnHtmxRequest) return ( responds
                 .status(StatusCodes.OK)
                 .type('application/json')
-                .send(searchResults)
+                .send(searchResult)
             );
         }
 
@@ -294,9 +294,7 @@ router.get("/:type/by-id/:id", requiresAuthentication, ensureValidType, async (r
             return ( responds
                 .status(StatusCodes.OK)
                 .type('text/html')
-                .send(
-                    searchResults.map( searchResultEntry => convert[type].toHTML(searchResultEntry) ).join("")
-                )
+                .send(convert[type].toHTML(searchResult))
             );
         }
 
