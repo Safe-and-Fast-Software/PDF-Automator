@@ -21,23 +21,25 @@
 
     *, svg { @apply text-black }
 
-    html, body { @apply bg-black; } main { @apply bg-white; }
-    h1    { @apply text-4xl mt-6 font-bold;                      }
-    h2    { @apply text-3xl mt-5 font-semibold;                  }
-    h3    { @apply text-2xl mt-3 font-medium;                    }   
-    h4    { @apply text-xl  mt-2 font-medium;                    }
-    p     { @apply          mt-1;                                }
-    input { @apply dark:bg-inherit;                              }
-    a.default { @apply underline;                                }
+    html, body       { @apply bg-black;                                    } 
+    main             { @apply bg-white;                                    }
+    h1               { @apply text-4xl mt-6 font-bold;                      }
+    h2               { @apply text-3xl mt-5 font-semibold;                  }
+    h3               { @apply text-2xl mt-3 font-medium;                    }   
+    h4               { @apply text-xl  mt-2 font-medium;                    }
+    p                { @apply          mt-1;                                }
+    input, textarea  { @apply dark:bg-inherit;                              }
+    a.default        { @apply underline;                                    }
 
-    input.default  { @apply text-left border border-current rounded-md p-1; }
-    label.default  { @apply text-right font-bold; }
-    div.form-group { @apply w-full grid grid-cols-[auto_1fr] gap-2 px-2; }
+    input.default, 
+    textarea.default { @apply text-left border border-current rounded-md p-1; }
+    label.default    { @apply text-right font-bold; }
+    div.form-group   { @apply w-full grid grid-cols-[auto_1fr] gap-2 px-2; }
     
-    button.default { @apply text-center px-4 py-2 border border-current rounded-3xl flex items-center; }
-    button.cancel  { @apply bg-gray-500 font-semibold text-white border-none; }
-    button.confirm { @apply bg-blue-500 font-semibold text-white border-none; }
-    button.delete  { @apply bg-red-500  font-semibold text-white border-none; }
+    button.default   { @apply text-center px-4 py-2 border border-current rounded-3xl flex items-center; }
+    button.cancel    { @apply bg-gray-500 font-semibold text-white border-none; }
+    button.confirm   { @apply bg-blue-500 font-semibold text-white border-none; }
+    button.delete    { @apply bg-red-500  font-semibold text-white border-none; }
 
     svg.inline-icon { @apply fill-white aspect-square h-5 mr-2 inline-block; }
 
