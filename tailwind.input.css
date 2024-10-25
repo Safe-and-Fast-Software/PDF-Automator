@@ -47,7 +47,7 @@
     form.inline-menu { @apply bg-black py-4 px-2 rounded-full w-fit mx-auto; }
 
     table { @apply min-w-full divide-y-4 divide-gray-300 border-gray-300 }
-    th { @apply text-left }
+    th { @apply text-left p-1.5 }
     tbody { @apply bg-white divide-y divide-gray-200 }
     tr { @apply divide-x divide-gray-200 }
     td { @apply p-2 }
