@@ -52,11 +52,12 @@ export const redisSchema = Object.freeze({
 //` Convert to HTML for different types.
 import customerCardComponent from "#source/utilities/responds/components/cards/customer-card.js";
 import documentCardComponent from "#source/utilities/responds/components/cards/document-card.js";
+import templateCardComponent from "#source/utilities/responds/components/cards/template-card.js";
 export const convert = Object.freeze({
-    "template": { toHTML: instance => `${instance}` },
-    "document": { toHTML: instance => documentCardComponent(instance) },
-    "customer": { toHTML: instance => customerCardComponent(instance) },
-    "user":     { toHTML: instance => `${instance}` },
+    "template": { toHTML: async instance => templateCardComponent(instance) },
+    "document": { toHTML: async instance => documentCardComponent(instance) },
+    "customer": { toHTML: async instance => customerCardComponent(instance) },
+    "user":     { toHTML: async instance => `[user(${instance?.name})]` },
 });
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //

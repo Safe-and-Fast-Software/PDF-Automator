@@ -6,30 +6,36 @@ import Ajv from 'ajv';
 
 export const redisSchema = Object.freeze({
     name:        { type: 'text', caseSensitive: false, textSearch: true, sortable: true },
-    createdBy:   { type: "string"                                                       },
+    json:        { type: "string"                                                       },
+    userID:      { type: "string"                                                       },
     dateCreated: { type: 'date'                                                         }
 });
 
 /** The JSON schema that every Customer should be in. */
 export const jsonSchema = Object.freeze({
     type: 'object',
-    required: [ "name", "createdBy", "dateCreated" ],
+    required: [ "name", "json", "userID", "dateCreated" ],
     additionalProperties: false,
     properties: {
-        name:        { type: 'string' },
-        createdBy:   { type: 'string' },
-        dateCreated: { type: "string", format: "date-time" }
+        name:        { type: 'string'                      },
+        json:        { type: "string"                      },
+        userID:      { type: 'string'                      },
+        dateCreated: { type: "string", 
+          format: "date-time" 
+        }
     }
 });
 
 const ajv = new Ajv();
 
 ajv.addFormat("date-time", {
-  type: "string",
-  validate: date => (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?$/.test(date)),
+    type: "string",
+    validate: date => {
+        const dateRegex = ( /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i );
+        const result = dateRegex.test(date);
+        return result;
+    },  
 });
-
-console.log("YES");
 
 /** Validates a JSON object to the Customer Schema. */
 export const validate = (ajv.compile(jsonSchema));

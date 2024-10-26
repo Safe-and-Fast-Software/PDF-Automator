@@ -27,7 +27,11 @@ export const jsonSchema = Object.freeze({
 const ajv = new Ajv();
 ajv.addFormat("date-time", {
   type: "string",
-  validate: date => (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?$/.test(date)),
+  validate: date => {
+      const dateRegex = ( /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i );
+      const result = dateRegex.test(date);
+      return result;
+  },
 });
 
 /** Validates a JSON object to the Customer Schema. */
