@@ -4,6 +4,7 @@ sessions/
 /public/styles/tailwind.output.css
 *.pdf
 
+
 # Logs
 logs
 *.log
