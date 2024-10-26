@@ -1,4 +1,6 @@
-FROM redis/redis-stack:7.4.0-v0
+# FROM redis/redis-stack:7.4.0-v0
+FROM redis/redis-stack@sha256:ee18d7ce6f3e9e9ddc315d8cb4e2db11e76bc89f52a35405aa5dac330421d98f
+
 WORKDIR /
 
 # Forcing the use of a custom redis configuration
