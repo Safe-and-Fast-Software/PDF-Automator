@@ -1,6 +1,6 @@
 "use-strict";
 
-import { StatusCodes } from "http-status-codes";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
 import loadBaseFirst from "#source/utilities/responds/load-base-first.js";
 
@@ -43,11 +43,10 @@ router.get("/", requiresAuthentication, loadBaseFirst, (request, responds) => {
                     </p>
                 </section>
                 <section id="action-segment" hx-get="/document/htmx/search-document" hx-trigger="load">
-
                 </section>
             </div>
-            <section id="content" class="mt-3">
-                Loading Documents...
+            <section id="content" class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3 mt-4">
+                Loading...
             </section>
         `)
     );
@@ -56,6 +55,9 @@ router.get("/", requiresAuthentication, loadBaseFirst, (request, responds) => {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  HTMX end Points  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 import htmxOnlyEndpoint from "#source/utilities/responds/htmx-only-endpoint.js";
+
+//`----------------------------------------------------- SEARCH ----------------------------------------------------`//
+
 router.get("/htmx/search-document", htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
@@ -65,10 +67,14 @@ router.get("/htmx/search-document", htmxOnlyEndpoint, requiresAuthentication, (r
             <p>
                 search document
             </p>
+            <div hx-target="#content" hx-get="/api/v1/document/all" hx-trigger="load"></div>
         `)
     );
 });
 
+//`----------------------------------------------------- CREATE ----------------------------------------------------`//
+
+import { EntityId } from "redis-om";
 router.get("/htmx/create-new-document", htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {
     return ( responds
         .status(StatusCodes.OK)
@@ -76,11 +82,114 @@ router.get("/htmx/create-new-document", htmxOnlyEndpoint, requiresAuthentication
         .send(/*HTML*/`
             <h3>Creating a new Document</h3>
             <p>
-                Create a document action.
+                Using the following form you can create documents. Just select a template, and a customer, and then 
+                the template will automatically be filled in with both information from you and the customer.
             </p>
+            <form hx-put="/api/v1/document" hx-trigger="submit" class="relative flex flex-col mt-3" id="document-creation"
+                hx-target="#content" hx-swap="afterbegin">
+                <div class="form-group flex-grow">
+                    <!-- Customer -->
+                    <label for="new-document-customer-select" class="default">Customer:</label>
+                    <select id="new-document-customer-select" class="default" name="customerID" required>
+                        <option value="" disabled selected hidden>Select an option</option>
+                        <optgroup label="Customers" hx-trigger="load" hx-target="this"
+                            hx-get="/document/htmx/create-new-document/options/customer">
+                        </optgroup>
+                    </select>
+                    <!-- Template -->
+                    <label for="new-document-template-select" class="default">Template:</label>
+                    <select id="new-document-template-select" class="default" name="templateID" required>
+                        <option value="" disabled selected hidden>Select an option</option>
+                        <optgroup label="Templates" hx-target="this"
+                            hx-trigger="load" hx-get="/document/htmx/create-new-document/options/template">
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="grid grid-cols-1 w-full mt-auto"> 
+                    <div class="flex justify-center mt-6">
+                        <button type="submit" class="default confirm">
+                            <svg class="inline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                <path class="fill-inherit" d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                            </svg>
+                            Create
+                        </button> 
+                    </div>
+                </div>
+            </form>
+            <div hx-target="#content" hx-get="/api/v1/document/all" hx-trigger="load"></div>
         `)
     );
 });
+
+import { repository as customerRepository } from "#source/utilities/database/schemas/customer.js";
+router.get("/htmx/create-new-document/options/customer", htmxOnlyEndpoint, requiresAuthentication, async (request, responds) => {
+    
+    try {
+
+        let respondsHTML = "";
+        /* Getting all the customers, and creating options out of them */ {
+            const customers = await customerRepository.search().sortAscending("name").return.all();
+            for ( const index in customers ) respondsHTML = (respondsHTML + /*html*/`
+                <option value="${customers[index][EntityId]}">${customers[index].name}</option>
+            `);
+        }
+
+        /* Returning the responds that we just build */ {
+            return ( responds
+                .status(StatusCodes.OK)
+                .type("text/html")
+                .send(respondsHTML)
+            );
+        }
+
+    } catch (error) { console.error(error);
+
+        /* Returning an error responds */ {
+            return ( responds
+                .status(StatusCodes.INTERNAL_SERVER_ERROR)
+                .type("text/html")
+                .send(/*HTML*/`<p> ${ReasonPhrases.INTERNAL_SERVER_ERROR}: There was an error getting all documents. </p>`)
+            );
+        }
+    }
+});
+
+import { repository as templateRepository } from "#source/utilities/database/schemas/template.js";
+router.get("/htmx/create-new-document/options/template", htmxOnlyEndpoint, requiresAuthentication, async (request, responds) => {
+    
+  try {
+
+        let respondsHTML = "";
+        /* Getting all the templates, and creating options out of them */ {
+            const templates = await templateRepository.search().sortAscending("name").return.all();
+            for ( const index in templates ) respondsHTML = (respondsHTML + /*html*/`
+                <option value="${templates[index][EntityId]}">${templates[index].name}</option>
+            `);
+        }
+
+        /* Returning the responds that we just build */ {
+            return ( responds
+                .status(StatusCodes.OK)
+                .type("text/html")
+                .send(respondsHTML)
+            );
+        }
+
+    } catch (error) { console.error(error);
+
+        /* Returning an error responds */ {
+            return ( responds
+                .status(StatusCodes.INTERNAL_SERVER_ERROR)
+                .type("text/html")
+                .send(/*HTML*/`<p> ${ReasonPhrases.INTERNAL_SERVER_ERROR}: There was an error getting all documents. </p>`)
+            );
+        }
+    }
+});
+
+//|---------------------------------------------------- TEMPLATE ---------------------------------------------------|//
+
+//`----------------------------------------------------- SEARCH ----------------------------------------------------`//
 
 router.get("/htmx/search-template", htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {
     return ( responds
@@ -91,9 +200,13 @@ router.get("/htmx/search-template", htmxOnlyEndpoint, requiresAuthentication, (r
             <p>
                 Search a template action
             </p>
+            <div hx-target="#content" hx-get="/api/v1/template/all?sort-by=name&sort-direction=ASC" hx-trigger="load">
+            </div>
         `)
     );
 });
+
+//`----------------------------------------------------- CREATE ----------------------------------------------------`//
 
 router.get("/htmx/create-new-template", htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {
     return ( responds

@@ -1,3 +1,5 @@
+"use-strict";
+
 import { repository } from "#source/utilities/database/schemas/all.js";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 

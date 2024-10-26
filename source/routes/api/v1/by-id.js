@@ -1,3 +1,5 @@
+"use-strict";
+
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { repository, validate, convert } from "#source/utilities/database/schemas/all.js";
 
@@ -49,7 +51,7 @@ export async function getByID(request, responds) {
           return ( responds
               .status(StatusCodes.OK)
               .type('text/html')
-              .send(convert[type].toHTML(searchResult))
+              .send((await convert[type].toHTML(searchResult)))
           );
       }
 
@@ -114,7 +116,7 @@ export async function postByID(request, responds) {
       
       const successResponds = {
           status: StatusCodes.OK, 
-          message: `${ReasonPhrases.OK}: Successfully updated ${type} with ${id}.`
+          message: `${ReasonPhrases.OK}: Successfully updated ${type} with ID: ${id}.`
       };
 
       /* Giving a JSON responds if it's not an HTMX request */ {

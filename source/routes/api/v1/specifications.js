@@ -1,3 +1,7 @@
+"use-strict";
+
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
+
 export function specifications(request, responds) {
 
   const apiSpecs = ({

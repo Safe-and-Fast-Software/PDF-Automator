@@ -1,3 +1,5 @@
+"use-strict";
+
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { repository, validate, convert } from "#source/utilities/database/schemas/all.js";
 import { EntityId } from "redis-om";
@@ -10,6 +12,19 @@ export async function createResource(request, responds) {
   const { type, id } = request.params;
 
   try {
+
+      /* Preparing the object for validation */ {
+          if ( type === "template" ) {
+              request.body.userID = request.session.passport.user;
+              request.body.dateCreated = new Date().toISOString();
+              if (typeof request.body.json !== "string") request.body.json = JSON.stringify(request.body.json);
+          } else if ( type === "document" ) {
+            request.body.userID = request.session.passport.user;
+            request.body.dateCreated = new Date().toISOString();
+            delete request.body.json;
+            console.log("this is the one: ", request.body);
+        }
+      }
 
       /* Validating JSON object to follow the custom schema */ {
           if (! validate[type](request.body)) return ( responds
@@ -45,7 +60,7 @@ export async function createResource(request, responds) {
           return ( responds
               .status(StatusCodes.OK)
               .type("text/html")
-              .send(convert[type].toHTML(instance))
+              .send((await convert[type].toHTML(instance)))
           );
       } 
 

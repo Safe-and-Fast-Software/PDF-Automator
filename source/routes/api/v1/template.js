@@ -1,3 +1,5 @@
+"use-strict";
+
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import pdfMakePrinter from "pdfmake/src/printer.js";
 

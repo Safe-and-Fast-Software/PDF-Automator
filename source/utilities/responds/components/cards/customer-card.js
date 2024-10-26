@@ -1,4 +1,8 @@
+"use-strict";
+
 import { EntityId } from "redis-om";
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
 export default function customerCardComponent(customer) {
 
