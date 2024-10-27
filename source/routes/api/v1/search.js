@@ -167,9 +167,12 @@ export async function search(request, responds) {
       return ( responds
         .status(StatusCodes.OK)
         .type('text/html')
-        .send((await Promise.all(
-          searchResults.map(async searchResultEntry => await convert[type].toHTML(searchResultEntry))
-        )).join(""))
+        .send(await (async () => { // add the ID to all items in the list
+          if (! Array.isArray(searchResults)) return (`${searchResults}`);
+          else return (await Promise.all(
+            searchResults.map(async searchResultEntry => await convert[type].toHTML(searchResultEntry))
+          )).join("");
+        })())
       );
     }
 
