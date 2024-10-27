@@ -26,6 +26,7 @@ router.use("/document", documentRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
+import { repository } from "#source/utilities/database/schemas/all.js"; 
 router.get('/', loadBaseFirst, async (request, responds) => {
   return ( responds
     .status(StatusCodes.OK)
@@ -80,23 +81,23 @@ router.get('/', loadBaseFirst, async (request, responds) => {
           <tbody>
             <tr>
               <td>Emails sent</td>
-              <td hx-trigger="load" hx-get="/api/v1/emails/all?get-count">Loading...</td>
+              <td>${ repository["email"] ? await repository["emails"]?.search()?.return?.count() : "TODO" }</td>
             </tr>
             <tr>
               <td>Users in database</td>
-              <td hx-trigger="load" hx-get="/api/v1/user/all?get-count">Loading...</td>
+              <td>${ repository["user"] ? await repository["user"]?.search()?.return?.count() : "TODO" }</td>
             </tr>
             <tr>
               <td>Customers in database</td>
-              <td hx-trigger="load" hx-get="/api/v1/customer/all?get-count">Loading...</td>
+              <td>${ repository["customer"] ? await repository["customer"]?.search()?.return?.count() : "TODO" }</td>
             </tr>
             <tr>
               <td>Documents in database</td>
-              <td hx-trigger="load" hx-get="/api/v1/document/all?get-count">Loading...</td>
+              <td>${ repository["document"] ? await repository["document"]?.search()?.return?.count() : "TODO" }</td>
             </tr>
             <tr>
               <td>Document Templates in database</td>
-              <td hx-trigger="load" hx-get="/api/v1/template/all?get-count">Loading...</td>
+              <td>${ repository["template"] ? await repository["template"]?.search()?.return?.count() : "TODO" }</td>
             </tr>
           </tbody>
         </table>
