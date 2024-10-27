@@ -44,6 +44,7 @@ export default function loadBaseFirst(request, responds, next) {
             <meta property="og:image" content="/logo.svg">
             <link href="/styles/tailwind.output.css" rel="stylesheet"> 
             <script src="${HTMX.url}" integrity="${HTMX.integrity}" crossorigin="anonymous"></script>
+            ${process.env.NODE_ENV === "production"?"":/*html*/`<script> htmx.config.debug = true; </script>`}
           </head>
           <body class="flex flex-col m-0 min-h-screen p-2">
             ${headerComponent(request)}
