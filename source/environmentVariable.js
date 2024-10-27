@@ -2,15 +2,15 @@
  * A class for throwing exceptions when environment variables are not set.
  */
 export class EnvironmentVariableNotSetError extends Error {
-    constructor(variableName) {
+  constructor(variableName) {
 
-        const message = `Environment variable '${variableName}' is not set.`;
-        super(message);
+    const message = `Environment variable '${variableName}' is not set.`;
+    super(message);
 
-        this.name = this.constructor.name;
+    this.name = this.constructor.name;
 
-        Error.captureStackTrace(this, this.constructor);
-    }
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
 
 /**
@@ -23,10 +23,10 @@ export class EnvironmentVariableNotSetError extends Error {
  */
 export default function getEnvironmentVariable(name, defaultValue=undefined) {
 
-    const value = process.env[name];
-    const environmentVariableIsNotSet = ( value === null || value === undefined || value === "" );
+  const value = process.env[name];
+  const environmentVariableIsNotSet = ( value === null || value === undefined || value === "" );
 
-    if (environmentVariableIsNotSet && defaultValue === undefined) throw new EnvironmentVariableNotSetError(name);
+  if (environmentVariableIsNotSet && defaultValue === undefined) throw new EnvironmentVariableNotSetError(name);
 
-    return value || defaultValue;
+  return (value || defaultValue);
 }

@@ -17,66 +17,66 @@ export async function getByID(request, responds) {
 
   try {
 
-      const searchResult = await repository[type].fetch(id);
-      
-      /* Returning a 404 if no entry with that ID exists. */ {
-          if ( Object.keys(searchResult).length === 0 ) {
-              
-              const errorResponds = {
-                  status: StatusCodes.NOT_FOUND,
-                  error: `${ReasonPhrases.NOT_FOUND}: no ${type} with ID \"${id}\".`
-              };
+    const searchResult = await repository[type].fetch(id);
+    
+    /* Returning a 404 if no entry with that ID exists. */ {
+      if ( Object.keys(searchResult).length === 0 ) {
+          
+        const errorResponds = {
+            status: StatusCodes.NOT_FOUND,
+            error: `${ReasonPhrases.NOT_FOUND}: no ${type} with ID \"${id}\".`
+        };
 
-              if (isNotAnHtmxRequest) return ( responds
-                  .status(errorResponds.status)
-                  .type('application/json')
-                  .send(errorResponds)
-              ); else return ( responds
-                  .status(errorResponds.status)
-                  .type('text/html')
-                  .send(errorResponds.error)
-              );
-          }
+        if (isNotAnHtmxRequest) return ( responds
+          .status(errorResponds.status)
+          .type('application/json')
+          .send(errorResponds)
+        ); else return ( responds
+          .status(errorResponds.status)
+          .type('text/html')
+          .send(errorResponds.error)
+        );
       }
+    }
 
-      /* Returning JSON if it's not an HTMX request. */ {
-          if (isNotAnHtmxRequest) return ( responds
-              .status(StatusCodes.OK)
-              .type('application/json')
-              .send(searchResult)
-          );
-      }
+    /* Returning JSON if it's not an HTMX request. */ {
+      if (isNotAnHtmxRequest) return ( responds
+        .status(StatusCodes.OK)
+        .type('application/json')
+        .send(searchResult)
+      );
+    }
 
-      /* Returning HTML in all other cases. */ {
-          return ( responds
-              .status(StatusCodes.OK)
-              .type('text/html')
-              .send((await convert[type].toHTML(searchResult)))
-          );
-      }
+    /* Returning HTML in all other cases. */ {
+      return ( responds
+        .status(StatusCodes.OK)
+        .type('text/html')
+        .send((await convert[type].toHTML(searchResult)))
+      );
+    }
 
-  } catch (error) { console.error(error);
-      
-      const errorResponds = { 
-          status: StatusCodes.INTERNAL_SERVER_ERROR, 
-          error: `${ReasonPhrases.INTERNAL_SERVER_ERROR}: could not fetch ${type} ${id}, an unknown error occurred.`,
-      };
+} catch (error) { console.error(error);
+    
+    const errorResponds = { 
+      status: StatusCodes.INTERNAL_SERVER_ERROR, 
+      error: `${ReasonPhrases.INTERNAL_SERVER_ERROR}: could not fetch ${type} ${id}, an unknown error occurred.`,
+    };
 
-      /* Giving a JSON error responds if it's not an HTMX request */ {
-          if (isNotAnHtmxRequest) return ( responds
-              .status(errorResponds.status)
-              .type('application/json')
-              .send(errorResponds)
-          );
-      }
+    /* Giving a JSON error responds if it's not an HTMX request */ {
+      if (isNotAnHtmxRequest) return ( responds
+        .status(errorResponds.status)
+        .type('application/json')
+        .send(errorResponds)
+      );
+    }
 
-      /* Giving an HTML error responds in all other cases. */ {
-          return ( responds
-              .status(errorResponds.status)
-              .type('text/html')
-              .send(errorResponds.error)
-          ); 
-      }
+    /* Giving an HTML error responds in all other cases. */ {
+      return ( responds
+        .status(errorResponds.status)
+        .type('text/html')
+        .send(errorResponds.error)
+      ); 
+    }
   }
 };
 

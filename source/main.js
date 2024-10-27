@@ -15,14 +15,14 @@ import RedisStore from "connect-redis"
 import client from "#source/utilities/database/client.js"
 import getEnvironmentVariable from '#source/environmentVariable.js';
 app.use(session({
-    store : new RedisStore({
-        client: client,
-        prefix: "session:",
-    }),
-    secret: getEnvironmentVariable("SESSION_SECRET"), 
-    failureRedirect: '/',
-    resave: false, 
-    saveUninitialized: true 
+  store : new RedisStore({
+    client: client,
+    prefix: "session:",
+  }),
+  secret: getEnvironmentVariable("SESSION_SECRET"), 
+  failureRedirect: '/',
+  resave: false, 
+  saveUninitialized: true 
 }));
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Configuring Passport ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ // 
@@ -66,14 +66,12 @@ app.use(handleError);
 import fs from 'fs';
 app.listen(80, () => {
 
-    if (process.env.NODE_ENV === "development") console.warn(
-        `[WARNING] Server running in ${process.env.NODE_ENV} mode. ` +
-        `Do *NOT* run this in production as it contains the ability to ignore all authentication to help test. ` +
-        `Running this as production means API is complete exposed if the right headers are supplied.`
-    );
-    
-    const version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
-    console.log(
-        `Server running version ${version} in ${process.env.NODE_ENV} mode on port 80.`
-    );
+  if (process.env.NODE_ENV === "development") console.warn(
+    `[WARNING] Server running in ${process.env.NODE_ENV} mode. ` +
+    `Do *NOT* run this in production as it contains the ability to ignore all authentication to help test. ` +
+    `Running this as production means API is complete exposed if the right headers are supplied.`
+  );
+  
+  const version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+  console.log(`Server running version ${version} in ${process.env.NODE_ENV} mode on port 80.`);
 });

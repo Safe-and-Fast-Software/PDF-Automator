@@ -38,9 +38,9 @@ router.delete("/:type/by-id/:id", requiresAuthentication, ensureValidType, delet
 import { specifications } from "#source/routes/api/v1/specifications.js";
 router.get("/", specifications);
 
-import { search } from "#source/routes/api/v1/search.js"
-router.get("/:type/all", requiresAuthentication, ensureValidType, search);
-router.get("/:type/search", requiresAuthentication, ensureValidType, search);
+import { search, searchMiddleware } from "#source/routes/api/v1/search.js"
+router.get("/:type/all", requiresAuthentication, ensureValidType, searchMiddleware, search);
+router.get("/:type/search", requiresAuthentication, ensureValidType, searchMiddleware, search);
 
 import { previewTemplate } from '#source/routes/api/v1/template.js';
 router.get("/template/preview/", requiresAuthentication, previewTemplate);
