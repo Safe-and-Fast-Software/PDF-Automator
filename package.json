@@ -1,5 +1,5 @@
 {
-    "name": "pdf-creater",
+    "name": "pdf-automator",
     "description": "Creates PDFs from JSON",
     "author": "SAFS",
     "version": "1.0.0",
@@ -25,6 +25,9 @@
         "type": "git",
         "url": "git+https://github.com/Safe-and-Fast-Software/PDF-Creater.git"
     },
+    "imports": {
+        "#source/*": "./source/*"
+    },
     "dependencies": {
         "-": "^0.0.1",
         "ajv": "^8.17.1",
@@ -36,6 +39,7 @@
         "express": "^4.21.1",
         "express-session": "^1.18.1",
         "http-status-codes": "^2.3.0",
+        "module-alias": "^2.2.3",
         "passport": "^0.7.0",
         "passport-oauth2": "^1.8.0",
         "pdfmake": "^0.2.11",

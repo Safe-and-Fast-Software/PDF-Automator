@@ -1,42 +1,53 @@
 "use-strict";
 
-import constants from "../../../constants.js";
+import requiresAuthentication from "#source/utilities/auth/require-authentication.js";
+import ensureValidType from "#source/routes/api/v1/ensure-valid-type.js"
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import Router from "express";
+import { Router } from "express";
 export const router = Router();
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Sub-Routes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-import { router as customerRouter } from "./customer/router.js";
-router.use("/customer", customerRouter);
-
-import { router as userRouter } from "./user/router.js"
-router.use("/user", userRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-router.get('/', (request, responds) => {
-    responds.send(/*html*/`
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>API</title>
-            </head>
-            <body>
-                <h1>API V1 endpoint</h1>
-                <p>
-                    This is the first generation API endpoint. 
-                    if a newer standard becomes available you'll be able to access it at <code>/api/v2</code>.
-                    To learn more about the API, you take a look at the 
-                    <a href="${constants.github.link}">github repository</a> to see the source code.
-                </p>                    
-            </body>
-        </html>
-    `);
-});
+//|----------------------------------------------------- By ID -----------------------------------------------------|//
+
+//`------------------------------------------------------ PUT ------------------------------------------------------`//
+
+router.put("/:type/by-id/:id", requiresAuthentication, ensureValidType, createResource);
+
+//`------------------------------------------------------ GET ------------------------------------------------------`//
+
+import { getByID } from '#source/routes/api/v1/by-id.js';
+router.get("/:type/by-id/:id", requiresAuthentication, ensureValidType, getByID);
+
+//`------------------------------------------------------ POST -----------------------------------------------------`//
+
+import { postByID } from '#source/routes/api/v1/by-id.js';
+router.post("/:type/by-id/:id", requiresAuthentication, ensureValidType, postByID);
+
+//`----------------------------------------------------- DELETE ----------------------------------------------------`//
+
+import { deleteByID } from '#source/routes/api/v1/by-id.js';
+router.delete("/:type/by-id/:id", requiresAuthentication, ensureValidType, deleteByID);
+
+//|------------------------------------------------- Miscellaneous -------------------------------------------------|//
+
+//`------------------------------------------------------ GET ------------------------------------------------------`//
+
+import { specifications } from "#source/routes/api/v1/specifications.js";
+router.get("/", specifications);
+
+import { search, searchMiddleware } from "#source/routes/api/v1/search.js"
+router.get("/:type/all", requiresAuthentication, ensureValidType, searchMiddleware, search);
+router.get("/:type/search", requiresAuthentication, ensureValidType, searchMiddleware, search);
+
+import { previewTemplate } from '#source/routes/api/v1/template.js';
+router.get("/template/preview/", requiresAuthentication, previewTemplate);
+
+//`------------------------------------------------------ PUT ------------------------------------------------------`//
+
+import { createResource } from '#source/routes/api/v1/create-resource.js';
+router.put("/:type/", requiresAuthentication, ensureValidType, createResource);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
