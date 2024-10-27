@@ -191,15 +191,56 @@ router.get("/htmx/create-new-document/options/template", htmxOnlyEndpoint, requi
 
 //`----------------------------------------------------- SEARCH ----------------------------------------------------`//
 
-router.get("/htmx/search-template", htmxOnlyEndpoint, requiresAuthentication, (request, responds) => {
+import { repository as userRepository } from "#source/utilities/database/schemas/user.js";
+router.get("/htmx/search-template", htmxOnlyEndpoint, requiresAuthentication, async (request, responds) => {
+
+    let userOptions = "";
+    /* Creating the HTML required for the options. */ {
+        const users = await userRepository.search().return.all();
+        for ( const index in users ) {
+            userOptions = ( 
+                userOptions + /*html*/`<option value="${users[index][EntityId]}">${users[index].name}</option>`
+            ); 
+        }
+    }
+    
     return ( responds
         .status(StatusCodes.OK)
         .type("text/html")
         .send(/*HTML*/`
             <h3>Searching a Template</h3>
-            <p>
-                Search a template action
-            </p>
+            <form hx-get="/api/v1/template/all" hx-target="#content" hx-trigger="submit" 
+                class="relative flex flex-col" id="template-search">
+                <div class="mt-4">
+                    <div class="form-group flex-grow">
+                        <!-- Name -->
+                        <label class="default" for="template-name">Name:</label>
+                        <input class="default"  id="template-name" name="name" type="text" placeholder="Invoice">
+                        <!-- Created by -->
+                        <label for="template-user-select" class="default">Created by:</label>
+                        <select id="template-user-select" class="default" name="userID">
+                            <option value="" selected>Select a creator</option>
+                            <optgroup label="Users">${userOptions}</optgroup>
+                        </select>
+                        <!-- Sort By -->
+                        <label class="hidden" for="template-sort-by">Sort by:</label>
+                        <input class="hidden"  id="template-sort-by" name="sort-by" type="text" value="name">
+                        <!-- Sort Direction -->
+                        <label class="hidden" for="template-sort-direction">Sort direction:</label>
+                        <input class="hidden"  id="template-sort-direction" name="sort-direction" type="text" value="ASC">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 w-full mt-auto"> 
+                    <div class="flex justify-center mt-6">
+                        <button type="submit" class="default confirm">
+                            <svg class="inline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                              <path class="fill-inherit" d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                            </svg>
+                            Search
+                        </button> 
+                    </div>
+                </div>
+            </form>
             <div hx-target="#content" hx-get="/api/v1/template/all?sort-by=name&sort-direction=ASC" hx-trigger="load">
             </div>
         `)
@@ -254,7 +295,6 @@ router.get("/htmx/create-new-template", htmxOnlyEndpoint, requiresAuthentication
                                     const iframe = document.getElementById("new-template-iframe");
                                     const textarea  = document.getElementById("new-template-body");
                                     const parameter = encodeURIComponent(textarea.value)
-                                    console.log("textarea", textarea.value, "parameter", parameter);
                                     iframe.src = "/api/v1/template/preview?name=preview&json="+parameter;
                                 };
                                 document.getElementById("new-template-preview-button")
