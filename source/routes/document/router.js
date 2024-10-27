@@ -196,7 +196,7 @@ router.get("/htmx/search-template", htmxOnlyEndpoint, requiresAuthentication, as
 
     let userOptions = "";
     /* Creating the HTML required for the options. */ {
-        const users = await userRepository.search().return.all();
+        const users = await userRepository.search().sortAscending("name").return.all();
         for ( const index in users ) {
             userOptions = ( 
                 userOptions + /*html*/`<option value="${users[index][EntityId]}">${users[index].name}</option>`

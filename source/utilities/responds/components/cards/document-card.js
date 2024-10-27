@@ -26,7 +26,7 @@ export default async function documentCardComponent(document) {
             /*html*/`<option value="${document.userID}" selected>Deleted User</option>`
         ); 
 
-        const users = await userRepository.search().return.all();
+        const users = await userRepository.search().sortAscending("name").return.all();
         for ( const index in users ) {
             const selected = ( users[index][EntityId] === document.userID ? "selected" : "" )
             userOptions = ( userOptions + /*html*/`
@@ -42,7 +42,7 @@ export default async function documentCardComponent(document) {
             /*html*/`<option value="${document.customerID}" selected>Deleted Customer</option>`
         ); 
 
-        const customers = await customerRepository.search().return.all();
+        const customers = await customerRepository.search().sortAscending("name").return.all();
         for ( const index in customers ) {
             const selected = ( customers[index][EntityId] === document.customerID ? "selected" : "" )
             customerOptions = ( customerOptions + /*html*/`
@@ -58,7 +58,7 @@ export default async function documentCardComponent(document) {
             /*html*/`<option value="${document.templateID}" selected>Deleted Template</option>`
         ); 
         
-        const templates = await templateRepository.search().return.all();
+        const templates = await templateRepository.search().sortAscending("name").return.all();
         for ( const index in templates ) {
             const selected = ( templates[index][EntityId] === document.templateID ? "selected" : "" )
             templateOptions = ( templateOptions + /*html*/`
