@@ -21,18 +21,20 @@ export default async function documentCardComponent(document) {
 
   let userOptions = "";
   /* Creating the HTML required for the options. */ {
-      const instance = await userRepository.fetch(document.userID);
-      if ( Object.keys(instance).length === 0 ) userOptions = ( userOptions + /*html*/`
-        <option value="${document.userID}" selected>Deleted User</option>`
-      ); 
+    const instance = await userRepository.fetch(document.userID);
+    if ( Object.keys(instance).length === 0 ) userOptions = ( userOptions + /*html*/`
+      <option value="${document.userID}" selected>Deleted User</option>`
+    ); 
 
-      const users = await userRepository.search().sortAscending("name").return.all();
-      for ( const index in users ) {
-        const selected = ( users[index][EntityId] === document.userID ? "selected" : "" )
-        userOptions = ( userOptions + /*html*/`
-          <option value="${users[index][EntityId]}" ${selected}>${users[index].name}</option>`
-        ); 
-      }
+    userOptions = (userOptions + /*html*/`<optgroup label="Users">`);
+    const users = await userRepository.search().sortAscending("name").return.all();
+    for ( const index in users ) {
+      const selected = ( users[index][EntityId] === document.userID ? "selected" : "" )
+      userOptions = ( userOptions + /*html*/`
+        <option value="${users[index][EntityId]}" ${selected}>${users[index].name}</option>`
+      ); 
+    }
+    userOptions = (userOptions + /*html*/`</optgroup>`);
   }
 
   let customerOptions = "";
@@ -41,7 +43,8 @@ export default async function documentCardComponent(document) {
     if ( Object.keys(instance).length === 0 ) customerOptions = ( customerOptions + /*html*/`
       <option value="${document.customerID}" selected>Deleted Customer</option>`
     ); 
-
+    
+    customerOptions = (customerOptions + /*html*/`<optgroup label="Customers">`);
     const customers = await customerRepository.search().sortAscending("name").return.all();
     for ( const index in customers ) {
       const selected = ( customers[index][EntityId] === document.customerID ? "selected" : "" )
@@ -49,22 +52,25 @@ export default async function documentCardComponent(document) {
         <option value="${customers[index][EntityId]}" ${selected}>${customers[index].name}</option>`
       ); 
     }
+    customerOptions = (customerOptions + /*html*/`</optgroup>`);
   }
   
   let templateOptions = "";
   /* Creating the HTML required for the options. */ {
-      const instance = await templateRepository.fetch(document.templateID);
-      if ( Object.keys(instance).length === 0 ) templateOptions = ( templateOptions + 
-        /*html*/`<option value="${document.templateID}" selected>Deleted Template</option>`
+    const instance = await templateRepository.fetch(document.templateID);
+    if ( Object.keys(instance).length === 0 ) templateOptions = ( templateOptions + 
+      /*html*/`<option value="${document.templateID}" selected>Deleted Template</option>`
+    ); 
+    
+    templateOptions = (templateOptions + /*html*/`<optgroup label="Templates">`);
+    const templates = await templateRepository.search().sortAscending("name").return.all();
+    for ( const index in templates ) {
+      const selected = ( templates[index][EntityId] === document.templateID ? "selected" : "" )
+      templateOptions = ( templateOptions + /*html*/`
+        <option value="${templates[index][EntityId]}" ${selected}>${templates[index].name}</option>`
       ); 
-      
-      const templates = await templateRepository.search().sortAscending("name").return.all();
-      for ( const index in templates ) {
-        const selected = ( templates[index][EntityId] === document.templateID ? "selected" : "" )
-        templateOptions = ( templateOptions + /*html*/`
-          <option value="${templates[index][EntityId]}" ${selected}>${templates[index].name}</option>`
-        ); 
-      }
+    }
+    templateOptions = (templateOptions + /*html*/`</optgroup>`);
   }
 
   return (/*HTML*/`
@@ -79,19 +85,13 @@ export default async function documentCardComponent(document) {
                 value="${document[EntityId]}" disabled>
             <!-- User -->
             <label for="${cardID}-created-by" class="default">Created by user:</label>
-            <select id="${cardID}-created-by" class="default" name="userID" required>
-              <optgroup label="Users">${userOptions}</optgroup>
-            </select>
+            <select id="${cardID}-created-by" class="default" name="userID" required>${userOptions}</select>
             <!-- Customer -->
             <label for="${cardID}-created-for" class="default">Created for customer:</label>
-            <select id="${cardID}-created-for" class="default" name="customerID" required>
-              <optgroup label="Customers">${customerOptions}</optgroup>
-            </select>
+            <select id="${cardID}-created-for" class="default" name="customerID" required>${customerOptions}</select>
             <!-- Template -->
             <label for="${cardID}-created-with" class="default">Created with template:</label>
-            <select id="${cardID}-created-with" class="default" name="templateID" required>
-              <optgroup label="Templates">${templateOptions}</optgroup>
-            </select>
+            <select id="${cardID}-created-with" class="default" name="templateID" required>${templateOptions}</select>
             <!-- Date -->
             <label for="${cardID}-created-on" class="default">Created on:</label>
             <input  id="${cardID}-created-on" class="default cursor-not-allowed" value="${document?.dateCreated.toISOString()}" name="dateCreated" readonly>

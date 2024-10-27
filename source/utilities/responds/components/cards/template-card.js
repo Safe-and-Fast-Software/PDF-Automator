@@ -18,15 +18,22 @@ export default async function templateCardComponent(instance) {
     }, 3000);
   `).replace(" ", ""));
 
-  let options = "";
+  let userOptions = "";
   /* Creating the HTML required for the options. */ {
+    const specificUser = await userRepository.fetch(instance.userID);
+    if ( Object.keys(specificUser).length === 0 ) userOptions = ( userOptions + /*html*/`
+      <option value="${instance.userID}" selected>Deleted User</option>`
+    ); 
+
+    userOptions = (userOptions + /*html*/`<optgroup label="Users">`);
     const users = await userRepository.search().sortAscending("name").return.all();
     for ( const index in users ) {
-      const selected = (users[index][EntityId] === instance.userID ? "selected" : "");
-      options = ( options + 
-        /*html*/`<option value="${users[index][EntityId]}" ${selected}>${users[index].name}</option>`
+      const selected = ( users[index][EntityId] === instance.userID ? "selected" : "" )
+      userOptions = ( userOptions + /*html*/`
+        <option value="${users[index][EntityId]}" ${selected}>${users[index].name}</option>`
       ); 
     }
+    userOptions = (userOptions + /*html*/`</optgroup>`);
   }
 
   return (/*HTML*/`
@@ -46,9 +53,7 @@ export default async function templateCardComponent(instance) {
             <textarea id="${cardID}-json" class="default" placeholder="[ ... ]" name="json" type="text" required>${instance?.json}</textarea>
             <!-- User -->
             <label for="${cardID}-created-with" class="default">Created by:</label>
-            <select id="${cardID}-created-with" class="default" name="userID" required>
-              <optgroup label="Users">${options}</optgroup>
-            </select>
+            <select id="${cardID}-created-with" class="default" name="userID" required>${userOptions}</select>
             <!-- Date -->
             <label for="${cardID}-created-on" class="default">Created on:</label>
             <input  id="${cardID}-created-on" class="default cursor-not-allowed" value="${instance?.dateCreated.toISOString()}" name="dateCreated" type="text" readonly>
