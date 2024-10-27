@@ -47,7 +47,7 @@ Now start the application:
 docker compose \
   --file docker-compose.yaml \
   --file docker-compose.dev.yaml \
-  up --force-recreate \
+  up --force-recreate --build \
   --abort-on-container-exit 
 ```
 
