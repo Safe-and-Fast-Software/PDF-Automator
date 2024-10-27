@@ -26,7 +26,6 @@ router.use("/document", documentRouter);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Points ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
-import { repository } from "#source/utilities/database/schemas/all.js";
 router.get('/', loadBaseFirst, async (request, responds) => {
   return ( responds
     .status(StatusCodes.OK)
@@ -50,14 +49,14 @@ router.get('/', loadBaseFirst, async (request, responds) => {
                   the web GUI to create it.
               </p>
           </section>
-          <section id="who-is-it-for" class="border border-gray-300 rounded-lg p-3">
+          <section id="who-is-it-for" class="border border-gray-300 rounded-lg p-3 mt-4 md:mt-0">
               <h2 class="mt-0 text-center">Who is it for?</h2>
               <p>
                   PDF Automator is for small business, who don't want to pay for invoice, contracting software. 
                   That's why I created this. (Also because it seemed like a fun summer project to make.)
               </p>
           </section>
-          <section id="want-to-see-more" class="border border-gray-300 rounded-lg p-3">
+          <section id="want-to-see-more" class="border border-gray-300 rounded-lg p-3 mt-4 md:mt-0">
               <h2 class="mt-0 text-center">Want to see more?</h2>
               <p>
                   There is are some pictures of the program as well as instructions on how to host it yourself
@@ -67,40 +66,40 @@ router.get('/', loadBaseFirst, async (request, responds) => {
           </section>
       </div>
       <section id="fun-facts" class="border border-gray-300 rounded-lg p-3 mt-4">
-          <h3 class="mt-0">Fun Facts</h3>
-          <p>
-              Here are some metrics of the application:
-          </p>
-          <table class="mt-3">
-              <thead>
-                  <tr>
-                      <th>Category</th>
-                      <th>Amount</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>Emails sent</td>
-                      <td>TODO<!-- TODO : implement --></td>
-                  </tr>
-                  <tr>
-                      <td>Users in database</td>
-                      <td>${(await repository?.user?.search()?.return?.count())}</td>
-                  </tr>
-                  <tr>
-                      <td>Customers in database</td>
-                      <td>${(await repository?.customer?.search()?.return?.count())}</td>
-                  </tr>
-                  <tr>
-                      <td>Documents in database</td>
-                      <td>${(await repository?.document?.search()?.return?.count())}</td>
-                  </tr>
-                  <tr>
-                      <td>Document Templates in database</td>
-                      <td>${(await repository?.template?.search()?.return?.count())}</td>
-                  </tr>
-              </tbody>
-          </table>
+        <h3 class="mt-0">Fun Facts</h3>
+        <p>
+            Here are some metrics of the application:
+        </p>
+        <table class="mt-3">
+          <thead>
+              <tr>
+                  <th>Category</th>
+                  <th>Amount</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Emails sent</td>
+              <td hx-trigger="load" hx-get="/api/v1/emails/all?get-count">Loading...</td>
+            </tr>
+            <tr>
+              <td>Users in database</td>
+              <td hx-trigger="load" hx-get="/api/v1/user/all?get-count">Loading...</td>
+            </tr>
+            <tr>
+              <td>Customers in database</td>
+              <td hx-trigger="load" hx-get="/api/v1/customer/all?get-count">Loading...</td>
+            </tr>
+            <tr>
+              <td>Documents in database</td>
+              <td hx-trigger="load" hx-get="/api/v1/document/all?get-count">Loading...</td>
+            </tr>
+            <tr>
+              <td>Document Templates in database</td>
+              <td hx-trigger="load" hx-get="/api/v1/template/all?get-count">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
       </section>`
     )
   );
