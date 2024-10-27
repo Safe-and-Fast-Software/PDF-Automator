@@ -5,15 +5,15 @@ import client from '#source/utilities/database/client.js';
 import Ajv from 'ajv';
 
 export const redisSchema = Object.freeze({
-  name:        { type: 'text',   caseSensitive: false },
-  phone:       { type: 'text',   caseSensitive: false },
-  email:       { type: 'text',   caseSensitive: false },
-  street1:     { type: 'text',   caseSensitive: false },
-  street2:     { type: 'text',   caseSensitive: false },
-  city:        { type: 'text',   caseSensitive: false },
-  postalCode:  { type: 'text',   caseSensitive: false },
-  country:     { type: 'text',   caseSensitive: false },
-  apiTokenIDs: { type: 'string[]', caseSensitive: false },
+  name:        { type: 'text',     caseSensitive: false, sortable: true },
+  phone:       { type: 'text',     caseSensitive: false                 },
+  email:       { type: 'text',     caseSensitive: false                 },
+  street1:     { type: 'text',     caseSensitive: false                 },
+  street2:     { type: 'text',     caseSensitive: false                 },
+  city:        { type: 'text',     caseSensitive: false                 },
+  postalCode:  { type: 'text',     caseSensitive: false                 },
+  country:     { type: 'text',     caseSensitive: false                 },
+  apiTokenIDs: { type: 'string[]', caseSensitive: false                 },
 });
 
 /** The JSON schema that every Customer should be in. */
