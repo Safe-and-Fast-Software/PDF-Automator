@@ -1,5 +1,17 @@
 > A Node.js program that creates PDFs from JSON. Can be hosted as an API or GUI. It will be used to automate the creation, and delivery of invoices, contracts, quota's etc. 
 
+<center>
+    <a href="https://github.com/Safe-and-Fast-Software/PDF-automator/graphs/contributors">
+        <img src="https://img.shields.io/github/contributors/Safe-and-Fast-Software/PDF-automator" alt="Contributors"/>
+    </a>
+    <a href="https://github.com/Safe-and-Fast-Software/PDF-automator/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22">
+        <img src="https://img.shields.io/github/issues/Safe-and-Fast-Software/PDF-automator/good%20first%20issue" alt="Good first issues" />
+    </a>
+    <a href="https://opensource.org/licenses/MIT" alt="Good first issues">
+        <img src="https://img.shields.io/badge/License-GPL%20v2.0-green.svg" alt="Licence badge" />
+    </a>
+</center>
+
 # PDF Automator
 Have you always wanted to create invoices, contracts, quota's and more automatically? Well this tool allows you to create PDFs for free using JSON objects. All you have to do is create templates for your company, using JSON. And then you can create instances using the API, or the web GUI! All for free if you self host it!
 
